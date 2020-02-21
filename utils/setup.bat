@@ -22,3 +22,10 @@ set FLASK_DEBUG=1
 
 REM Run App
 flask run
+
+
+
+REM For Heroku
+heroku apps:create unit-converter-tool
+git remote -v
+git push heroku master
