@@ -34,3 +34,7 @@ git push heroku master
 
 REM Merge with build folder in ui branch (after running npm run build in ui branch)
 git pull
+git checkout origin/ui -- build
+git add *
+git commit -m "Some awesome comment"
+git push heroku
