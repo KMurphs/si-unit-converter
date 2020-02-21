@@ -2,8 +2,9 @@ REM Initial Setup
 py -3 -m venv venv
 venv\Scripts\activate
 pip install Flask
+pip install gunicorn
 pip freeze > requirements.txt
-
+echo web: gunicorn app:app > Procfile
 
 REM Prepare Repo for python coding
 cd .\venv\Scripts
