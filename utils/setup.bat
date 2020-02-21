@@ -30,3 +30,7 @@ REM For Heroku
 heroku apps:create unit-converter-tool
 git remote -v
 git push heroku master
+
+
+REM Merge with build folder in ui branch (after running npm run build in ui branch)
+git pull
