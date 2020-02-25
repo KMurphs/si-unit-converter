@@ -37,4 +37,5 @@ git pull
 git checkout origin/ui -- build
 git add *
 git commit -m "Some awesome comment"
-git push heroku
+git push heroku 
+  
