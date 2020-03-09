@@ -201,9 +201,11 @@ export default class ModelController {
   convert(val: TSIValue, initialUnits: TOpUnit, targetUnits: TOpUnit, author: string = ""): Promise<TSIValue>{
     
     return new Promise((resolve, reject) => {
+      let temp = initialUnits.baseFactor * Math.pow(10, val.exponent) * val.mantisse / targetUnits.baseFactor
+      let [man, exp] = temp.toExponential().toLowerCase().split("e")
       let res: TSIValue = {
-        mantisse: 1,
-        exponent: 1
+        mantisse: parseFloat(man),
+        exponent: parseFloat(exp)
       }
 
       if(JSON.stringify(initialUnits.dimension) !== JSON.stringify(targetUnits.dimension)){

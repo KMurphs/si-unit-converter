@@ -1,5 +1,5 @@
 import ModelController from './model.controller';
-import { TUnit, TUnitDefinition, TOpUnit } from './types';
+import { TUnit, TUnitDefinition, TOpUnit, TSIValue } from './types';
 import { SISuffix } from './native';
 
 
@@ -134,6 +134,31 @@ describe("ModelController", ()=>{
     expect(opUnit.dimension[2]).toHaveProperty('symbol', 'T');
     expect(opUnit.dimension[2]).toHaveProperty('exponent', -4);  
     expect(opUnit.baseFactor).toBe(Math.pow(10, -4.5));  
+
+  })
+
+
+  test("Can Perform Conversion", async ()=>{
+    const mc = new ModelController()
+
+    let val: TSIValue
+
+    val = await mc.convert(
+      { mantisse: 1, exponent: 1 },
+      mc.buildOpUnit([{suffix: SISuffix.KILO, symbol: 'g', exponent: 1}]),
+      mc.buildOpUnit([{suffix: SISuffix.UNITY, symbol: 'g', exponent: 1}])
+    )
+    expect(val).toHaveProperty("mantisse", 1)
+    expect(val).toHaveProperty("exponent", 4)
+    
+
+    val = await mc.convert(
+      { mantisse: 1, exponent: 1 },
+      mc.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+      mc.buildOpUnit([{suffix: SISuffix.MEGA, symbol: 's', exponent: 2}])
+    )
+    expect(val).toHaveProperty("mantisse", 1)
+    expect(val).toHaveProperty("exponent", -13)
 
   })
 
