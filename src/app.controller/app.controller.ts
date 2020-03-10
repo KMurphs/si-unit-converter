@@ -242,19 +242,20 @@ export default class AppController {
       let prevSufIndex = 0
       this.suffixes.forEach((suf, index) => {
         if(suf.exponentOf10 === currSuf){
-          prevSufIndex = index - 1
+          prevSufIndex = index + 1
         }
       })
-      return prevSufIndex >= 0 ? this.suffixes[prevSufIndex] : this.suffixes[this.suffixes.length - 1] 
+      return prevSufIndex < this.suffixes.length ? this.suffixes[prevSufIndex] : this.suffixes[0]
+      
     },
     getNext: (currSuf: SISuffix): TSuffix => {
       let nextSufIndex = 0
       this.suffixes.forEach((suf, index) => {
         if(suf.exponentOf10 === currSuf){
-          nextSufIndex = index + 1
+          nextSufIndex = index - 1
         }
       })
-      return nextSufIndex < this.suffixes.length ? this.suffixes[nextSufIndex] : this.suffixes[0] 
+      return nextSufIndex >= 0 ? this.suffixes[nextSufIndex] : this.suffixes[this.suffixes.length - 1] 
     },
     getByValue: (currSuf: SISuffix): TSuffix => {
       let sufIndex = 0

@@ -14,15 +14,18 @@ type TProps = {
 }
 const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixUtils, unitDefUtils}) => {
   
-  // const handleNewMantisse = (sivalue: TSIValue, mantisse: number)=>{
-  //   sivalue.mantisse = mantisse
-  //   onChange(sivalue)
-  // }
+
   const handleNewSuffix = (siunit: TUnit, suffix: SISuffix)=>{
-    siunit.suffix = suffix
+    siunit.suffix = suffix 
+    onChange(siunit)
+  }
+  const handleNewUnit = (siunit: TUnit, symbol: string)=>{
+    siunit.suffix = siunit.suffix/siunit.exponent 
+    siunit.symbol = symbol 
     onChange(siunit)
   }
   const handleNewExponent = (siunit: TUnit, exponent: number)=>{
+    siunit.suffix = siunit.suffix/siunit.exponent 
     siunit.exponent = exponent
     onChange(siunit)
   }
@@ -33,12 +36,16 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
     <div className={`si-unit-editor ${extraClasses}`}>
             
         <div className="si-unit-container">
-            <UpDownInputContainer onNext={()=>handleNewSuffix(siunit, suffixUtils.getNext(siunit.suffix/siunit.exponent).exponentOf10)} onPrevious={()=>{}} >
+            <UpDownInputContainer onNext={()=>handleNewSuffix(siunit, suffixUtils.getNext(siunit.suffix/siunit.exponent).exponentOf10)} 
+                                  onPrevious={()=>handleNewSuffix(siunit, suffixUtils.getPrevious(siunit.suffix/siunit.exponent).exponentOf10)} 
+            >
                  {toCapital(SISuffix[siunit.suffix/siunit.exponent])}
             </UpDownInputContainer>
         </div>
         <div className="si-unit-container">
-            <UpDownInputContainer onNext={()=>{}} onPrevious={()=>{}} >
+            <UpDownInputContainer onNext={()=>handleNewUnit(siunit, unitDefUtils.getNext(siunit.symbol).symbol)}
+                                  onPrevious={()=>handleNewUnit(siunit, unitDefUtils.getPrevious(siunit.symbol).symbol)}
+            >
                  {siunit.symbol + " "}
             </UpDownInputContainer>
             <UpDownInput value={siunit.exponent} 
