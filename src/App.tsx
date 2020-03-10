@@ -8,7 +8,9 @@ import { SISuffix } from './app.controller/app.native.data';
 import SIValueEditor from './components/SIValueEditor/SIValueEditor';
 import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
 
-
+declare global {
+  interface Window { MathJax: any; }
+}
 type TUiItem = {
   initialValue: TSIValue,
   initiatUnits: TOpUnit,
@@ -18,6 +20,7 @@ type TUiItem = {
 }
 function App() {
 
+  window.MathJax && console.log(window.MathJax)
 
   let ac = useRef<AppController|null>(null);
   (ac.current === null) && (ac.current = new AppController());
@@ -86,7 +89,24 @@ function App() {
             })
           }
           
-
+          {
+            uiConversion.targetUnits.units.map((un, index) => { 
+              return (
+                <SIUnitEditor siunit={un} 
+                              key={index}
+                              suffixUtils={suffixUtils}
+                              unitDefUtils={unitsDefinitionsUtils}
+                              onChange={newVal=>{
+                                const uns = uiConversion.targetUnits.units.map((tmp, idx) => {
+                                  (index === idx) && (tmp = {...newVal});
+                                  return tmp;
+                                })
+                                ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", uns)
+                              }}
+                />
+              )
+            })
+          }
 
 
 

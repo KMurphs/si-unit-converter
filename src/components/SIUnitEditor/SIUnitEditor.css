@@ -6,9 +6,21 @@
 .si-unit-container{
   display: flex;
   margin-left: 1rem;
+  transform: scale(.8);
 }
 .si-unit-editor .si-unit-exponent{
   position: relative;
   top: -1rem;
   margin-left: 1rem;
+}
+
+.si-unit-separator{
+  margin-left: 1rem;
+}
+
+.si-unit-mathjax{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: scale(1.2);
 }
