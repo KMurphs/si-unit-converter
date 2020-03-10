@@ -60,7 +60,7 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
 
       <div className={`si-conversion-match`}>
         {
-          dimensionsMatch && (
+          !dimensionsMatch && (
             <p>Dimensions Do Not Match</p>
           )
         }

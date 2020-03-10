@@ -29,18 +29,38 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
+  width: 80px;
+  overflow-y: auto;
 }
-.app-sidebar *{
+.app-sidebar,.app-sidebar *{
   -webkit-transition: all .4s;
   -moz-transition: all .4s;
   -o-transition: all .4s;
   transition: all .4s;
 }
 
+
+.sidebar-control-container{
+  display: flex;
+  flex-direction: column-reverse;
+  background: rgba(0,0,0,0.1);
+  /* position: relative; */
+  width: 100%;
+  padding: .8rem .5rem .3rem .5rem;
+  cursor: pointer;
+  margin-bottom: .3rem;
+}
+.sidebar-control-container:hover{
+  background-color: var(--orange-700);
+}
+
+
+
 .sidebar-control{
   font-size: 2rem;
-  height: 75px;width: 75px;
-  background-color: rgba(0,0,0,0.1);
+  /* height: 75px; */
+  /* width: 75px; */
+  /* background-color: rgba(0,0,0,0.1); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,27 +69,49 @@
   font-size: 2.5rem;
 }
 
-.sidebar-control_details{
-  opacity: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  width: 0;
+.app-sidebar .sidebar-control_details{
+  font-size: .6rem;
+  width: 100%;
+  word-break: break-word;
+  margin-top: .5rem;
+  color: #bababa;
+}
+.app-sidebar .sidebar-control-container:hover .sidebar-control_details{
+  color: var(--orange-300) !important;
 }
 
 
-.app-sidebar:hover .sidebar-control_details{
-  opacity: 1;
-  width: 10rem;
+
+
+@media (min-width: 768px){
+  .app-sidebar:hover{
+    width: 20rem;
+  }
+  .app-sidebar .sidebar-control-container{
+    flex-direction: row;
+    height: 80px;
+  }
+  .app-sidebar .sidebar-control{
+    width: 100%;
+  }
+  .app-sidebar .sidebar-control_details{
+    opacity: 0;
+    overflow: hidden;
+    width: 0;
+  }
+  .app-sidebar:hover .sidebar-control_details{
+    opacity: 1;
+    padding: .5rem;
+    width: 15rem;
+    margin: 0;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
 }
-.sidebar-control-container{
-  display: flex;
-}
-.sidebar-control-container:hover{
-  background-color: var(--orange-700);
-  cursor: pointer;
-}
+
 
 
 
