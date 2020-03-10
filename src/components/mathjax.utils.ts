@@ -1,14 +1,24 @@
-import { TUnit, TSuffix } from "../app.controller/app.types";
+import { TUnit, TSuffix, TDimension } from "../app.controller/app.types";
+import { SISuffix } from "../app.controller/app.native.data";
 
-// const buildMathJaxUnits = (units: TOperationalUnit[], addParenthesis: boolean):string => {
-//   let num: string = ''
-//   let den: string = ''
-//   units.forEach(unit => {
-//     unit.exponent >= 0 && (num = num + buildMathJaxUnit(unit, addParenthesis));
-//     unit.exponent < 0 &&  (den = den + buildMathJaxUnit(unit, addParenthesis));
-//   })
-//   return `(${num === '' ? '1' : num})${den === '' ? '' : `/(${den})`}`
-// }
+
+
+
+
+
+
+
+
+
+const buildMathJaxUnits = (units: TUnit[], addParenthesis: boolean, getSuffixByValue: (suff: SISuffix)=>TSuffix):string => {
+  let num: string = ''
+  let den: string = ''
+  units.forEach(unit => {
+    unit.exponent >= 0 && (num = num + buildMathJaxUnit(unit.symbol, getSuffixByValue(unit.suffix/unit.exponent), unit.exponent, addParenthesis));
+    unit.exponent < 0 &&  (den = den + buildMathJaxUnit(unit.symbol, getSuffixByValue(unit.suffix/unit.exponent), unit.exponent, addParenthesis));
+  })
+  return `(${num === '' ? '1' : num})${den === '' ? '' : `/(${den})`}`
+}
 
 const buildMathJaxUnit = (unitSymbol: string, unitSuffix: TSuffix, unitExponent: number, addParenthesis: boolean):string => {
   
@@ -21,5 +31,40 @@ const buildMathJaxUnit = (unitSymbol: string, unitSuffix: TSuffix, unitExponent:
 
   return tmp
 }
-export {buildMathJaxUnit}
-// export {buildMathJaxUnits, buildMathJaxUnit}
+
+
+
+
+
+
+
+
+
+
+
+
+
+const buildMathJaxDimensions = (dimensions: TDimension[], addParenthesis: boolean):string => {
+  let num: string = ''
+  let den: string = ''
+  dimensions.forEach(dim => {
+    dim.exponent >= 0 && (num = num + buildMathJaxDimension(dim.symbol, dim.exponent, addParenthesis));
+    dim.exponent < 0 &&  (den = den + buildMathJaxDimension(dim.symbol, dim.exponent, addParenthesis));
+  })
+  return `${den === '' ? `${num === '' ? '1' : num}` : `(${num === '' ? '1' : num})/(${den})`}`
+}
+
+const buildMathJaxDimension = (dimensionSymbol: string, dimensionExponent: number, addParenthesis: boolean):string => {
+  
+  let exp = Math.abs(dimensionExponent) === 1 ? '' : `^${Math.abs(dimensionExponent)}`
+  let tmp = ''
+  dimensionExponent >= 0 && (tmp = tmp + `${addParenthesis?'(':''}\\${dimensionSymbol}${exp}${addParenthesis?')':''}`);
+  dimensionExponent < 0 &&  (tmp = tmp + `${addParenthesis?'(':''}\\${dimensionSymbol}${exp}${addParenthesis?')':''}`);
+
+  return tmp
+}
+
+
+
+
+export {buildMathJaxUnits, buildMathJaxUnit, buildMathJaxDimensions}

@@ -7,13 +7,14 @@ import { TSIValue, TOpUnit, TUnit } from './app.controller/app.types';
 import { SISuffix } from './app.controller/app.native.data';
 import SIValueEditor from './components/SIValueEditor/SIValueEditor';
 import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
+import Conversion from './components/Conversion/Conversion';
 
 declare global {
   interface Window { MathJax: any; }
 }
 type TUiItem = {
   initialValue: TSIValue,
-  initiatUnits: TOpUnit,
+  initialUnits: TOpUnit,
   targetUnits: TOpUnit,
   targetValue: TSIValue,
   author: string
@@ -31,7 +32,7 @@ function App() {
 
   const [uiConversion, _setUiConversion] = useState<TUiItem>({
     initialValue: { mantisse: 1, exponent: 1 },
-    initiatUnits: ac.current.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+    initialUnits: ac.current.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
     targetUnits: ac.current.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
     targetValue: { mantisse: 1, exponent: 1 },
     author: ""
@@ -42,20 +43,20 @@ function App() {
     
 
     key.toLowerCase() === "initialValue".toLowerCase() && val && (curr.initialValue = {...val as TSIValue})
-    key.toLowerCase() === "initiatUnits".toLowerCase() && val && (curr.initiatUnits = ac.buildOpUnit(val as TUnit[]))
+    key.toLowerCase() === "initialUnits".toLowerCase() && val && (curr.initialUnits = ac.buildOpUnit(val as TUnit[]))
     key.toLowerCase() === "targetUnits".toLowerCase() && val && (curr.targetUnits = ac.buildOpUnit(val as TUnit[]))
     key.toLowerCase() === "author".toLowerCase() && val && (curr.author = val as string)
     if(key.toLowerCase() !== "author".toLowerCase()){
-      const tmp = await ac.convert(curr.initialValue, curr.initiatUnits, curr.targetUnits)
+      const tmp = await ac.convert(curr.initialValue, curr.initialUnits, curr.targetUnits)
                           .catch(err => console.log(err));
       tmp && (curr.targetValue = {...tmp})
     }
     
-    console.log(key, curr.initiatUnits)
+    console.log(key, curr.initialUnits)
 
     _setUiConversion({...curr})
   }
-  console.log(uiConversion.initiatUnits)
+  console.log(uiConversion.initialUnits)
 
 
 
@@ -65,24 +66,32 @@ function App() {
 
         <div className="app-container bg-red-100">
 
+          <div className="current-conversion">
+            <Conversion initialValue={uiConversion.initialValue}
+                        targetValue={uiConversion.targetValue}
+                        initialUnits={uiConversion.initialUnits}
+                        targetUnits={uiConversion.targetUnits}
+                        getSuffix={suffixUtils.getByValue}
+            />
+          </div>
 
           <SIValueEditor sivalue={{...uiConversion.initialValue}} 
                          onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "initialValue", newVal)}
           />
         
           {
-            uiConversion.initiatUnits.units.map((un, index) => { 
+            uiConversion.initialUnits.units.map((un, index) => { 
               return (
                 <SIUnitEditor siunit={un} 
                               key={index}
                               suffixUtils={suffixUtils}
                               unitDefUtils={unitsDefinitionsUtils}
                               onChange={newVal=>{
-                                const uns = uiConversion.initiatUnits.units.map((tmp, idx) => {
+                                const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
                                   (index === idx) && (tmp = {...newVal});
                                   return tmp;
                                 })
-                                ac.current && setUiConversion(ac.current, uiConversion, "initiatUnits", uns)
+                                ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", uns)
                               }}
                 />
               )
@@ -129,9 +138,9 @@ function App() {
         </div>
 
         {/* <div>{uiConversion.initialValue.mantisse} 10^{uiConversion.initialValue.exponent}</div>
-        <div>{JSON.stringify(uiConversion.initiatUnits.units)}</div>
-        <div>{JSON.stringify(uiConversion.initiatUnits.dimension)}</div>
-        <div>{uiConversion.initiatUnits.baseFactor}</div>
+        <div>{JSON.stringify(uiConversion.initialUnits.units)}</div>
+        <div>{JSON.stringify(uiConversion.initialUnits.dimension)}</div>
+        <div>{uiConversion.initialUnits.baseFactor}</div>
 
         <div>-----------</div>
 
