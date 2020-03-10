@@ -33,6 +33,13 @@ export const nativeSuffixes: TSuffix[] = [
   { symbol: 'h', name: SISuffix[SISuffix.HECTO].toLowerCase(), exponentOf10: SISuffix.HECTO },
   { symbol: 'da', name: SISuffix[SISuffix.DECA].toLowerCase(), exponentOf10: SISuffix.DECA },
   { symbol: '', name: SISuffix[SISuffix.UNITY].toLowerCase(), exponentOf10: SISuffix.UNITY },
+  { symbol: 'd', name: SISuffix[SISuffix.DECI].toLowerCase(), exponentOf10: SISuffix.DECI },
+  { symbol: 'c', name: SISuffix[SISuffix.CENTI].toLowerCase(), exponentOf10: SISuffix.CENTI },
+  { symbol: 'm', name: SISuffix[SISuffix.MILLI].toLowerCase(), exponentOf10: SISuffix.MILLI },
+  { symbol: 'μ', name: SISuffix[SISuffix.MICRO].toLowerCase(), exponentOf10: SISuffix.MICRO },
+  { symbol: 'n', name: SISuffix[SISuffix.NANO].toLowerCase(), exponentOf10: SISuffix.NANO },
+  { symbol: 'p', name: SISuffix[SISuffix.PICO].toLowerCase(), exponentOf10: SISuffix.PICO },
+  { symbol: 'f', name: SISuffix[SISuffix.FENTO].toLowerCase(), exponentOf10: SISuffix.FENTO }
 ]
 
 

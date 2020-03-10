@@ -1,0 +1,14 @@
+.si-unit-editor{
+  display: flex;
+  justify-content: center;
+}
+
+.si-unit-container{
+  display: flex;
+  margin-left: 1rem;
+}
+.si-unit-editor .si-unit-exponent{
+  position: relative;
+  top: -1rem;
+  margin-left: 1rem;
+}

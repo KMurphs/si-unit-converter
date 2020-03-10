@@ -1,4 +1,4 @@
-import { TUnitDefinition, TUnit, TSuffix, TRecord, TOpUnit, TDimension, TSIValue } from "./app.types"
+import { TUnitDefinition, TUnit, TSuffix, TRecord, TOpUnit, TDimension, TSIValue, TUnitDefinitionUtils, TSuffixUtils } from "./app.types"
 import { nativeUnitDefinitions, nativeSuffixes, SISuffix } from "./app.native.data";
 
 export default class AppController {
@@ -237,6 +237,67 @@ export default class AppController {
 
 
 
+  suffixUtils: TSuffixUtils = {
+    getPrevious: (currSuf: SISuffix): TSuffix => {
+      let prevSufIndex = 0
+      this.suffixes.forEach((suf, index) => {
+        if(suf.exponentOf10 === currSuf){
+          prevSufIndex = index - 1
+        }
+      })
+      return prevSufIndex >= 0 ? this.suffixes[prevSufIndex] : this.suffixes[this.suffixes.length - 1] 
+    },
+    getNext: (currSuf: SISuffix): TSuffix => {
+      let nextSufIndex = 0
+      this.suffixes.forEach((suf, index) => {
+        if(suf.exponentOf10 === currSuf){
+          nextSufIndex = index + 1
+        }
+      })
+      return nextSufIndex < this.suffixes.length ? this.suffixes[nextSufIndex] : this.suffixes[0] 
+    },
+    getByValue: (currSuf: SISuffix): TSuffix => {
+      let sufIndex = 0
+      this.suffixes.forEach((suf, index) => {
+        if(suf.exponentOf10 === currSuf){
+          sufIndex = index
+        }
+      })
+      return this.suffixes[sufIndex] 
+    }
+  }
+
+
+
+  unitsDefinitionsUtils: TUnitDefinitionUtils = {
+    getPrevious: (currSymbol: string): TUnitDefinition => {
+      let prevDefIndex = 0
+      this.unitsDefinitions.forEach((def, index) => {
+        if(def.symbol === currSymbol){
+          prevDefIndex = index - 1
+        }
+      })
+      return prevDefIndex >= 0 ? this.unitsDefinitions[prevDefIndex] : this.unitsDefinitions[this.unitsDefinitions.length - 1] 
+    },
+    getNext: (currSymbol: string): TUnitDefinition => {
+      let nextDefIndex = 0
+      this.unitsDefinitions.forEach((def, index) => {
+        if(def.symbol === currSymbol){
+          nextDefIndex = index + 1
+        }
+      })
+      return nextDefIndex < this.unitsDefinitions.length ? this.unitsDefinitions[nextDefIndex] : this.unitsDefinitions[0] 
+    },
+    getBySymbol: (currSymbol: string): TUnitDefinition => {
+      let defIndex = 0
+      this.unitsDefinitions.forEach((def, index) => {
+        if(def.symbol === currSymbol){
+          defIndex = index 
+        }
+      })
+      return this.unitsDefinitions[defIndex]
+    },
+  }
 
 
 }

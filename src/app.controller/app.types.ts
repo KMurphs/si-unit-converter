@@ -1,3 +1,5 @@
+import { SISuffix } from "./app.native.data"
+
 export type TMeta = {
   author: string,
   timestamp: number
@@ -59,4 +61,26 @@ export type TSuffix = {
   symbol: string,
   name: string,
   exponentOf10: number
+}
+
+
+
+
+
+
+
+
+
+
+
+
+export type TSuffixUtils = {
+  getNext: (currSuff: SISuffix) => TSuffix
+  getPrevious: (currSuff: SISuffix) => TSuffix
+  getByValue: (currSuff: SISuffix) => TSuffix
+}
+export type TUnitDefinitionUtils = {
+  getNext: (currSymbol: string) => TUnitDefinition
+  getPrevious: (currSymbol: string) => TUnitDefinition
+  getBySymbol: (currSymbol: string) => TUnitDefinition
 }
