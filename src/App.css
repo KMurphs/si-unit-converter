@@ -2,8 +2,8 @@
   text-align: center;
   display: flex;
   height: 100vh;
+  overflow-y: hidden;
   width: 100vw;
-  
 }
 .App > *{
     -webkit-transition: all .4s;
@@ -16,6 +16,9 @@
   flex-grow: 1;
   margin-right: 80px;
   padding: .5rem;
+  position: relative;
+  overflow-y: hidden;
+  height: 100vh;
 }
 
 
@@ -284,3 +287,11 @@
   font-size: .7rem;
   line-height: 1.3;
 }
+
+
+
+
+
+
+
+

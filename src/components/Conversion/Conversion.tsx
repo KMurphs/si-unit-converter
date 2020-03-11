@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import "./Conversion.css"
 import { TSIValue, TOpUnit, TSuffix } from '../../app.controller/app.types';
 import { SISuffix } from '../../app.controller/app.native.data';
-import { buildMathJaxUnits, buildMathJaxDimensions } from '../mathjax.utils';
+import { buildMathJaxUnits, buildMathJaxDimensions, round } from '../mathjax.utils';
 
 
 type TProps = {
@@ -28,7 +28,7 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
 
     pRef_start.current && (pRef_start.current.innerHTML = `\`${initialValue.mantisse}&nbsp;*&nbsp;10^(${initialValue.exponent})&nbsp;${buildMathJaxUnits(initialUnits.units, mustShowParenthesis, getSuffix)}\``);
     pRef_equal.current && (pRef_equal.current.innerHTML = `\`=\``);
-    pRef_final.current && (pRef_final.current.innerHTML = `\`${targetValue.mantisse}&nbsp;*&nbsp;10^(${targetValue.exponent})&nbsp;${buildMathJaxUnits(targetUnits.units, mustShowParenthesis, getSuffix)}\``);
+    pRef_final.current && (pRef_final.current.innerHTML = `\`${round(targetValue.mantisse, 4)}&nbsp;*&nbsp;10^(${targetValue.exponent})&nbsp;${buildMathJaxUnits(targetUnits.units, mustShowParenthesis, getSuffix)}\``);
 
     window.MathJax && window.MathJax.typeset && window.MathJax.typeset()
   });

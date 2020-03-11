@@ -65,7 +65,8 @@ const buildMathJaxDimension = (dimensionSymbol: string, dimensionExponent: numbe
   return tmp
 }
 const toCapital = (str: string): string => str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase()
+// const round = (val: number, dec: number)=>Number(`${Math.round(Number(`${val}e${dec}`))}e-${dec}`)
+const round = (val: number, dec: number)=>Number(`${Math.round(Number(`${val}e${dec}`))}e-${dec}`)
 
 
-
-export {buildMathJaxUnits, buildMathJaxUnit, buildMathJaxDimensions, toCapital}
+export {buildMathJaxUnits, buildMathJaxUnit, buildMathJaxDimensions, toCapital, round}

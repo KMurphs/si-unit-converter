@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 import './App.css';
 import './utils.css';
 import AppController from './app.controller/app.controller';
-import { TSIValue, TOpUnit, TUnit } from './app.controller/app.types';
+import { TSIValue, TOpUnit, TUnit, TUnitDefinition } from './app.controller/app.types';
 import { SISuffix } from './app.controller/app.native.data';
 import SIValueEditor from './components/SIValueEditor/SIValueEditor';
 import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
 import Conversion from './components/Conversion/Conversion';
 import { toCapital } from './components/mathjax.utils';
+import SlideUpPane, { UpDownInputContainer } from './components/SlideUpPane/SlideUpPane';
 
 declare global {
   interface Window { MathJax: any; }
@@ -80,7 +81,8 @@ function App() {
   }
   console.log(uiConversion.initialUnits)
 
-
+  const [alsoShowUnitsPane, setAlsoShowUnitsPane] = useState<boolean>(false)
+  const [siunitToAdd, setSiunitToAdd] = useState<TUnitDefinition>(unitsDefinitionsUtils.getBySymbol("m"))
 
 
   return (
@@ -98,49 +100,110 @@ function App() {
             />
           </div>
 
-          <SIValueEditor sivalue={{...uiConversion.initialValue}} 
+
+
+          <SlideUpPane state={controls.initialvalue} onClose={()=>{let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialvalue = false; setControls(state)}}>
+            <SIValueEditor sivalue={{...uiConversion.initialValue}} 
                          onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "initialValue", newVal)}
-          />
-        
-          {
-            uiConversion.initialUnits.units.map((un, index) => { 
-              return (
-                <SIUnitEditor siunit={un} 
-                              key={index}
-                              suffixUtils={suffixUtils}
-                              unitDefUtils={unitsDefinitionsUtils}
-                              mustShowParenthesis={showparenthesis}
-                              onChange={newVal=>{
-                                const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
-                                  (index === idx) && (tmp = {...newVal});
-                                  return tmp;
-                                })
-                                ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", uns)
-                              }}
-                />
-              )
-            })
-          }
-          
-          {
-            uiConversion.targetUnits.units.map((un, index) => { 
-              return (
-                <SIUnitEditor siunit={un} 
-                              key={index}
-                              suffixUtils={suffixUtils}
-                              unitDefUtils={unitsDefinitionsUtils}
-                              mustShowParenthesis={showparenthesis}
-                              onChange={newVal=>{
-                                const uns = uiConversion.targetUnits.units.map((tmp, idx) => {
-                                  (index === idx) && (tmp = {...newVal});
-                                  return tmp;
-                                })
-                                ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", uns)
-                              }}
-                />
-              )
-            })
-          }
+            />
+          </SlideUpPane>
+
+
+
+
+
+
+
+
+
+          <SlideUpPane state={controls.initialunits} onClose={()=>{let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialunits = false; setControls(state)}}>
+            {
+              uiConversion.initialUnits.units.map((un, index) => { 
+                return (
+                  <SIUnitEditor siunit={un} 
+                                key={index}
+                                suffixUtils={suffixUtils}
+                                unitDefUtils={unitsDefinitionsUtils}
+                                mustShowParenthesis={showparenthesis}
+                                onChange={newVal=>{
+                                  const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
+                                    (index === idx) && (tmp = {...newVal});
+                                    return tmp;
+                                  })
+                                  ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", uns)
+                                }}
+                  />
+                )
+              })
+            }
+            <div className="si-unit-editor-add-unit" >
+              
+              <div className="si-unit-editor-add-button"
+                   onClick={evt=>{
+                     ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])
+                   }}
+              >
+                <i className="fas fa-plus"></i>
+              </div>
+              <p>Add Unit: </p>
+              <div>
+                <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
+                                      onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
+                >
+                    {siunitToAdd.symbol + " "}
+                </UpDownInputContainer>
+              </div>
+
+            </div>
+          </SlideUpPane>
+
+
+
+
+
+
+
+
+          <SlideUpPane state={controls.targetunits} onClose={()=>{let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.targetunits = false; setControls(state)}}>
+            {
+              uiConversion.targetUnits.units.map((un, index) => { 
+                return (
+                  <SIUnitEditor siunit={un} 
+                                key={index}
+                                suffixUtils={suffixUtils}
+                                unitDefUtils={unitsDefinitionsUtils}
+                                mustShowParenthesis={showparenthesis}
+                                onChange={newVal=>{
+                                  const uns = uiConversion.targetUnits.units.map((tmp, idx) => {
+                                    (index === idx) && (tmp = {...newVal});
+                                    return tmp;
+                                  })
+                                  ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", uns)
+                                }}
+                  />
+                )
+              })
+            }
+            <div className="si-unit-editor-add-unit" >
+              
+              <div className="si-unit-editor-add-button"
+                   onClick={evt=>{
+                     ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", [...uiConversion.targetUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])
+                   }}
+              >
+                <i className="fas fa-plus"></i>
+              </div>
+              <p>Add Unit: </p>
+              <div>
+                <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
+                                      onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
+                >
+                    {siunitToAdd.symbol + " "}
+                </UpDownInputContainer>
+              </div>
+
+            </div>
+          </SlideUpPane>
 
 
         </div>
@@ -151,17 +214,12 @@ function App() {
 
 
         <div className="app-sidebar bg-gray-800 text-white box-shadow">
-          <div className={`app-side-data-container ${controls.initialunits ? 'app-side-data-container--visible' : ''}`}>
+          <div className={`app-side-data-container ${controls.initialunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
             {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
           </div>
-          <div className={`app-side-data-container ${controls.initialvalue ? 'app-side-data-container--visible' : ''}`}>
-            {
-              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
-            }
-          </div>
-          <div className={`app-side-data-container ${controls.targetunits ? 'app-side-data-container--visible' : ''}`}>
+          <div className={`app-side-data-container ${controls.targetunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
             {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
