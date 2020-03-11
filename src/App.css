@@ -153,9 +153,11 @@
   background-color: #355;
   z-index: 10;
   right: 0;
+  
 }
 .app-side-data-container.app-side-data-container--visible{
   right: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .app-side-data-container .app-side-data-item{
   display: flex;

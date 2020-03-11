@@ -86,7 +86,7 @@ function App() {
     <div className="App d-flex-row">
 
         <div className="app-container bg-red-100">
-
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas unde tempora adipisci qui, exercitationem fuga vel at recusandae placeat labore dicta odit? Blanditiis aut voluptatem dicta ipsum velit qui iure voluptatibus non, cupiditate nihil consectetur quod reiciendis laudantium, illo at et vitae. Nihil quis rerum tenetur vel possimus voluptate commodi vero eius nemo voluptas quos magni voluptatum eligendi consectetur, enim odit adipisci dicta repellat. Provident quae culpa eaque suscipit deserunt sequi temporibus sed placeat quia et, quam quibusdam esse qui, voluptatem expedita deleniti dicta. Repudiandae aut totam reprehenderit voluptatibus consectetur praesentium animi accusantium natus a! Provident enim vel minima impedit.</p>
           <div className="current-conversion">
             <Conversion initialValue={uiConversion.initialValue}
                         targetValue={uiConversion.targetValue}
@@ -144,7 +144,7 @@ function App() {
 
 
 
-        <div className="app-sidebar bg-gray-800 text-white">
+        <div className="app-sidebar bg-gray-800 text-white box-shadow">
           <div className={`app-side-data-container ${controls.initialunits ? 'app-side-data-container--visible' : ''}`}>
             {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
