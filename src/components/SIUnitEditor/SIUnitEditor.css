@@ -35,11 +35,11 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #eee;
-  border-top: 2px solid #eee;
+  /* border-top: 2px solid #eee; */
   color: var(--orange-600);
   background-color: #f6cba8;
 
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
 
@@ -61,4 +61,19 @@
 
 .si-unit-text{
   padding: .5rem 0.3rem;
+}
+
+
+@media (min-width: 768px){
+  .si-unit-editor .si-unit-exponent,
+  .up-down-input-component.up-down-input-component--container{
+    min-width: 5rem;
+  }
+  .si-unit-editor-add-unit .si-unit-editor-add-button{
+    padding: .8rem;
+    font-size: 2.5rem;
+  }
+  .si-unit-editor-add-unit > p{
+    font-size: 1.5rem;
+  }
 }

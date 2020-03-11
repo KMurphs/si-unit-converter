@@ -21,3 +21,32 @@
   font-style: italic;
   font-weight: bold;
 }
+
+.mathjax-item--result{
+  transform: scale(1.7);
+}
+.si-conversion-display .mathjax-item{
+  margin-top: 1rem;
+}
+.si-conversion-dimension-container{
+  padding: 1rem 1rem 0.5rem 1rem;
+  border-radius: 4px;
+  border: 1px solid gray;
+}
+.si-conversion-dimension-container.bg-ok{
+  border: 1px solid var(--green-400);
+}
+
+.si-conversion-dimension-container.bg-danger{
+  border: 1px solid var(--red-400);
+  padding-bottom: 1rem;
+}
+@media (min-width: 768px){
+  .si-conversion-dimension-title{
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+  }
+  .si-conversion-display .mathjax-item{
+    margin-top: 1.7rem;
+  }
+}

@@ -46,3 +46,10 @@
 .up-down-input-component .up-down-input-control:hover .fas{
   color: rgba(0,0,0,1);
 }
+
+@media (min-width: 768px){
+
+  .up-down-input-component .up-down-input-value input  {
+    padding-left: 1.2rem;
+  }
+}

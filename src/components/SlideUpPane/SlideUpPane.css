@@ -39,6 +39,7 @@
 .bottom-pane-close input{
   position: fixed;
   top: 0;
+  display: none;
 }
 .bottom-pane .bottom-pane-inner{
   padding-top: 1rem;

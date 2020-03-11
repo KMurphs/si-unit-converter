@@ -84,6 +84,7 @@ function App() {
 
   // const [unitPane, usingPaneForControl] = useState<boolean>(false)
   const [siunitToAdd, setSiunitToAdd] = useState<TUnitDefinition>(unitsDefinitionsUtils.getBySymbol("m"))
+  const [siunitOnDisplay, setSiunitOnDisplay] = useState<TUnit>({suffix: SISuffix.UNITY, symbol: 'm', exponent: 0})
   const onResetApp = ()=>{
     // setAlsoShowUnitsPane(false)
     setControls({...controlsDefault})
@@ -146,7 +147,7 @@ function App() {
   
   
   return (
-    <div className="App d-flex-row">
+    <div className="App d-flex-row bg-white">
 
         <div className="app-container bg-red-100">
 
@@ -201,19 +202,26 @@ function App() {
                                 unitDefUtils={unitsDefinitionsUtils}
                                 mustShowParenthesis={showparenthesis}
                                 onOpenSuffixPane={()=>{
-                                  console.log("--------------")
                                   onPaneItemClick.current = (suff: TSuffix)=>{
-                                    console.log("+++++", index, un, suff)
                                     setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes", "initialunits"], [false, true]))
                                     let _un = {...un}
                                     _un.suffix = suff.exponentOf10 
                                     ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", updateUnitCollection(uiConversion.initialUnits.units, _un, index))
                                     onPaneItemClick.current = null;
                                   }
+                                  setSiunitOnDisplay(tmp => {tmp.suffix = un.suffix/un.exponent; tmp.symbol = un.symbol ; return {...tmp}})
                                   setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes"], [true]))
                                 }}
                                 onOpenUnitPane={()=>{
-                                  onPaneItemClick.current = ()=>{console.log("[EHEHEHEHEHE]"); onPaneItemClick.current = null;}
+                                  onPaneItemClick.current = (def: TUnitDefinition)=>{
+                                    setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes", "initialunits"], [false, true]))
+                                    let _un = {...un}
+                                    _un.symbol = def.symbol
+                                    _un.suffix = _un.suffix/_un.exponent  
+                                    ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", updateUnitCollection(uiConversion.initialUnits.units, _un, index))
+                                    onPaneItemClick.current = null;
+                                  }
+                                  setSiunitOnDisplay(tmp => {tmp.suffix = un.suffix/un.exponent; tmp.symbol = un.symbol ; return {...tmp}})
                                   setControls(updateControlObj(controlsDefault, controls, ["viewunits"], [true]))
                                 }}
                                 onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", updateUnitCollection(uiConversion.initialUnits.units, newVal, index))}
@@ -253,9 +261,21 @@ function App() {
                                     ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", updateUnitCollection(uiConversion.targetUnits.units, _un, index))
                                     onPaneItemClick.current = null;
                                   }
+                                  setSiunitOnDisplay(tmp => {tmp.suffix = un.suffix/un.exponent; tmp.symbol = un.symbol ; return {...tmp}})
                                   setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes"], [true]))
                                 }}
-                                onOpenUnitPane={()=>setControls(updateControlObj(controlsDefault, controls, ["viewunits"], [true]))}
+                                onOpenUnitPane={()=>{
+                                  onPaneItemClick.current = (def: TUnitDefinition)=>{
+                                    setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes", "targetunits"], [false, true]))
+                                    let _un = {...un}
+                                    _un.symbol = def.symbol
+                                    _un.suffix = _un.suffix/_un.exponent  
+                                    ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", updateUnitCollection(uiConversion.targetUnits.units, _un, index))
+                                    onPaneItemClick.current = null;
+                                  }
+                                  setSiunitOnDisplay(tmp => {tmp.suffix = un.suffix/un.exponent; tmp.symbol = un.symbol ; return {...tmp}})
+                                  setControls(updateControlObj(controlsDefault, controls, ["viewunits"], [true]))
+                                }}
                                 mustShowParenthesis={showparenthesis}
                                 onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", updateUnitCollection(uiConversion.targetUnits.units, newVal, index))}
                   />
@@ -304,7 +324,7 @@ function App() {
           <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>
             {
               suffixUtils.getAll().map((un, id) => (
-                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) } className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''}`}>
+                <div key={id} onClick={ evt => { onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un); setSiunitOnDisplay(tmp => {tmp.suffix=un.exponentOf10; return {...tmp}}) } } className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''} ${siunitOnDisplay.suffix===un.exponentOf10?'app-side-data-item-suffix--active':''}`}>
                   <p className="suffix-exponent">10 <span>{un.exponentOf10>0?'+':''}{un.exponentOf10}</span></p>
                   <p className="suffix-details">
                     <span className="suffix-name">{un.exponentOf10 > 0 ? toCapital(un.name) : un.name.toLowerCase()}</span>
@@ -320,7 +340,7 @@ function App() {
           <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
             {
               unitsDefinitionsUtils.getAll().map((un, id) => (
-                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) }  className="app-side-data-item app-side-data-item-unit-definition">
+                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) }  className={`app-side-data-item app-side-data-item-unit-definition  ${siunitOnDisplay.symbol===un.symbol?'app-side-data-item-unit-definition--active':''}`}>
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
                     <span className="definition-name">{un.name}</span>

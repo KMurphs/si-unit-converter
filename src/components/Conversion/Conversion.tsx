@@ -47,24 +47,27 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
 
       <div className={`si-conversion-display`}>
         <div ref={pRef_start} className="mathjax-item"></div>
-        <div ref={pRef_equal}></div>
-        <div ref={pRef_final} className="mathjax-item"></div>
+        <div ref={pRef_equal} className="mathjax-item"></div>
+        <div ref={pRef_final} className="mathjax-item mathjax-item--result"></div>
       </div>
 
 
       <div className="si-conversion-dimension-title">Dimensions</div>
-      <div className={`si-conversion-dimension ${dimensionsMatch?'text-green-700':'text-red-800'}`}>
-        <div ref={dRef_start} className="mathjax-item"></div>
-        <div ref={dRef_equal}></div>
-        <div ref={dRef_final} className="mathjax-item"></div>
+      <div className={`si-conversion-dimension-container ${dimensionsMatch?'bg-ok bg-green-200':'bg-danger bg-red-200'}`}>
+        <div className={`si-conversion-dimension ${dimensionsMatch?'text-green-700':'text-red-800'}`}>
+          <div ref={dRef_start} className="mathjax-item"></div>
+          <div ref={dRef_equal} className="mathjax-item"></div>
+          <div ref={dRef_final} className="mathjax-item"></div>
+        </div>
+        <div className={`si-conversion-match`}>
+          {
+            !dimensionsMatch && (
+              <p>Dimensions Do Not Match</p>
+            )
+          }
+        </div>
       </div>
-      <div className={`si-conversion-match`}>
-        {
-          !dimensionsMatch && (
-            <p>Dimensions Do Not Match</p>
-          )
-        }
-      </div>
+
 
 
     </div>
