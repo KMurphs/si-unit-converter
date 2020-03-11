@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import './App.css';
 import './utils.css';
 import AppController from './app.controller/app.controller';
-import { TSIValue, TOpUnit, TUnit, TUnitDefinition } from './app.controller/app.types';
+import { TSIValue, TOpUnit, TUnit, TUnitDefinition, TSuffix } from './app.controller/app.types';
 import { SISuffix } from './app.controller/app.native.data';
 import SIValueEditor from './components/SIValueEditor/SIValueEditor';
 import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
@@ -63,8 +63,6 @@ function App() {
   const setUiConversion = async (ac: AppController, currUiConversion: TUiItem, key: string, val: any)=>{
     let curr = {...currUiConversion}
 
-    
-
     key.toLowerCase() === "initialValue".toLowerCase() && val && (curr.initialValue = {...val as TSIValue})
     key.toLowerCase() === "initialUnits".toLowerCase() && val && (curr.initialUnits = ac.buildOpUnit(val as TUnit[]))
     key.toLowerCase() === "targetUnits".toLowerCase() && val && (curr.targetUnits = ac.buildOpUnit(val as TUnit[]))
@@ -81,15 +79,80 @@ function App() {
   }
   console.log(uiConversion.initialUnits.units)
 
-  const [alsoShowUnitsPane, setAlsoShowUnitsPane] = useState<boolean>(false)
+
+
+
+  // const [unitPane, usingPaneForControl] = useState<boolean>(false)
   const [siunitToAdd, setSiunitToAdd] = useState<TUnitDefinition>(unitsDefinitionsUtils.getBySymbol("m"))
+  const onResetApp = ()=>{
+    // setAlsoShowUnitsPane(false)
+    setControls({...controlsDefault})
+    setSiunitToAdd(unitsDefinitionsUtils.getBySymbol("m"))
+    ac.current && _setUiConversion({
+      initialValue: { mantisse: 1, exponent: 1 },
+      initialUnits: ac.current.buildOpUnit([{suffix: SISuffix.CENTI, symbol: 'm', exponent: 2},{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+      targetUnits: ac.current.buildOpUnit([{suffix: SISuffix.CENTI, symbol: 'm', exponent: 2},{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+      targetValue: { mantisse: 1, exponent: 1 },
+      author: ""
+    })
+  }
+  
+  
+  
+  
+  
+  const updateUnitCollection = (unCollection: TUnit[], unObj: TUnit, unIndex: number): TUnit[]=>{
+    const uns = unCollection.map((tmp, idx) => {
+      (unIndex === idx) && (tmp = {...unObj});
+      (unIndex !== idx) && (tmp.suffix /= tmp.exponent);
+      return tmp;
+    })
+    return uns
+  }
+  const updateControlObj = (controlsDefault: TControls, controlsCurrent: TControls, updateKeys: string[], updateVals: boolean[])=>{
+    let state = {...controlsDefault}; 
 
+    for(let idx in updateKeys){
+      switch(updateKeys[idx]){
+        case 'initialunits': state.initialunits = updateVals[idx]; break;
+        case 'initialvalue': state.initialvalue = updateVals[idx]; break;
+        case 'targetunits': state.targetunits = updateVals[idx]; break;
+        case 'viewsuffixes': state.viewsuffixes = updateVals[idx]; break;
+        case 'viewunits': state.viewunits = updateVals[idx]; break;
+        default: break;
+      }
+    }
 
+    state.showparenthesis = controlsCurrent.showparenthesis; 
+    return state
+  }
+  let onPaneItemClick = useRef<Function|null>(null)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   return (
     <div className="App d-flex-row">
 
         <div className="app-container bg-red-100">
-          {/* <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas unde tempora adipisci qui, exercitationem fuga vel at recusandae placeat labore dicta odit? Blanditiis aut voluptatem dicta ipsum velit qui iure voluptatibus non, cupiditate nihil consectetur quod reiciendis laudantium, illo at et vitae. Nihil quis rerum tenetur vel possimus voluptate commodi vero eius nemo voluptas quos magni voluptatum eligendi consectetur, enim odit adipisci dicta repellat. Provident quae culpa eaque suscipit deserunt sequi temporibus sed placeat quia et, quam quibusdam esse qui, voluptatem expedita deleniti dicta. Repudiandae aut totam reprehenderit voluptatibus consectetur praesentium animi accusantium natus a! Provident enim vel minima impedit.</p> */}
+
+
+          
+          
           <div className="current-conversion">
             <Conversion initialValue={uiConversion.initialValue}
                         targetValue={uiConversion.targetValue}
@@ -102,11 +165,23 @@ function App() {
 
 
 
+
+
+
           <SlideUpPane state={controls.initialvalue} onClose={()=>{let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialvalue = false; setControls(state)}}>
             <SIValueEditor sivalue={{...uiConversion.initialValue}} 
                          onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "initialValue", newVal)}
             />
           </SlideUpPane>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,26 +200,29 @@ function App() {
                                 suffixUtils={suffixUtils}
                                 unitDefUtils={unitsDefinitionsUtils}
                                 mustShowParenthesis={showparenthesis}
-                                onChange={newVal=>{
-                                  const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
-                                    (index === idx) && (tmp = {...newVal});
-                                    (index !== idx) && (tmp.suffix = tmp.suffix/tmp.exponent);
-                                    console.log("[App]: ", tmp, newVal, index, idx)
-                                    return tmp;
-                                  })
-                                  ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", uns)
+                                onOpenSuffixPane={()=>{
+                                  console.log("--------------")
+                                  onPaneItemClick.current = (suff: TSuffix)=>{
+                                    console.log("+++++", index, un, suff)
+                                    setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes", "initialunits"], [false, true]))
+                                    let _un = {...un}
+                                    _un.suffix = suff.exponentOf10 
+                                    ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", updateUnitCollection(uiConversion.initialUnits.units, _un, index))
+                                    onPaneItemClick.current = null;
+                                  }
+                                  setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes"], [true]))
                                 }}
+                                onOpenUnitPane={()=>{
+                                  onPaneItemClick.current = ()=>{console.log("[EHEHEHEHEHE]"); onPaneItemClick.current = null;}
+                                  setControls(updateControlObj(controlsDefault, controls, ["viewunits"], [true]))
+                                }}
+                                onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", updateUnitCollection(uiConversion.initialUnits.units, newVal, index))}
                   />
                 )
               })
             }
             <div className="si-unit-editor-add-unit" >
-              
-              <div className="si-unit-editor-add-button"
-                   onClick={evt=>{
-                     ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])
-                   }}
-              >
+              <div className="si-unit-editor-add-button" onClick={evt=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
                 <i className="fas fa-plus"></i>
               </div>
               <p>Add Unit: </p>
@@ -155,15 +233,8 @@ function App() {
                     {siunitToAdd.symbol + " "}
                 </UpDownInputContainer>
               </div>
-
             </div>
           </SlideUpPane>
-
-
-
-
-
-
 
 
           <SlideUpPane state={controls.targetunits} onClose={()=>{let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.targetunits = false; setControls(state)}}>
@@ -174,25 +245,25 @@ function App() {
                                 key={index}
                                 suffixUtils={suffixUtils}
                                 unitDefUtils={unitsDefinitionsUtils}
-                                mustShowParenthesis={showparenthesis}
-                                onChange={newVal=>{
-                                  const uns = uiConversion.targetUnits.units.map((tmp, idx) => {
-                                    (index === idx) && (tmp = {...newVal});
-                                    return tmp;
-                                  })
-                                  ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", uns)
+                                onOpenSuffixPane={()=>{
+                                  onPaneItemClick.current = (suff: TSuffix)=>{
+                                    setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes", "targetunits"], [false, true]))
+                                    let _un = {...un}
+                                    _un.suffix = suff.exponentOf10 
+                                    ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", updateUnitCollection(uiConversion.targetUnits.units, _un, index))
+                                    onPaneItemClick.current = null;
+                                  }
+                                  setControls(updateControlObj(controlsDefault, controls, ["viewsuffixes"], [true]))
                                 }}
+                                onOpenUnitPane={()=>setControls(updateControlObj(controlsDefault, controls, ["viewunits"], [true]))}
+                                mustShowParenthesis={showparenthesis}
+                                onChange={newVal=>ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", updateUnitCollection(uiConversion.targetUnits.units, newVal, index))}
                   />
                 )
               })
             }
             <div className="si-unit-editor-add-unit" >
-              
-              <div className="si-unit-editor-add-button"
-                   onClick={evt=>{
-                     ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", [...uiConversion.targetUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])
-                   }}
-              >
+              <div className="si-unit-editor-add-button" onClick={evt=>ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", [...uiConversion.targetUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
                 <i className="fas fa-plus"></i>
               </div>
               <p>Add Unit: </p>
@@ -203,11 +274,8 @@ function App() {
                     {siunitToAdd.symbol + " "}
                 </UpDownInputContainer>
               </div>
-
             </div>
           </SlideUpPane>
-
-
         </div>
 
 
@@ -215,27 +283,28 @@ function App() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div className="app-sidebar bg-gray-800 text-white box-shadow">
-          <div className={`app-side-data-container ${controls.initialunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
-            {
-              // Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
-            }
-          </div>
-          <div className={`app-side-data-container ${controls.targetunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
-            {
-              // Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
-            }
-          </div>
-
-
-
-
 
 
           <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>
             {
               suffixUtils.getAll().map((un, id) => (
-                <div key={id} className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''}`}>
+                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) } className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''}`}>
                   <p className="suffix-exponent">10 <span>{un.exponentOf10>0?'+':''}{un.exponentOf10}</span></p>
                   <p className="suffix-details">
                     <span className="suffix-name">{un.exponentOf10 > 0 ? toCapital(un.name) : un.name.toLowerCase()}</span>
@@ -251,7 +320,7 @@ function App() {
           <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
             {
               unitsDefinitionsUtils.getAll().map((un, id) => (
-                <div key={id} className="app-side-data-item app-side-data-item-unit-definition">
+                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) }  className="app-side-data-item app-side-data-item-unit-definition">
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
                     <span className="definition-name">{un.name}</span>
@@ -264,6 +333,14 @@ function App() {
 
 
 
+
+
+
+
+
+
+
+
           <div className="app-side-controls-container bg-gray-800">
             <label htmlFor="control-initialunits" className={`sidebar-control-container ${controls.initialunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialunits" checked={controls.initialunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Initial Units</div><div className="sidebar-control"><i className="fas fa-balance-scale"></i></div></label>
             <label htmlFor="control-initialvalue" className={`sidebar-control-container ${controls.initialvalue?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialvalue" checked={controls.initialvalue} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialvalue = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Value To Convert</div><div className="sidebar-control"><i className="fas fa-sort-numeric-up"></i></div></label>
@@ -271,7 +348,7 @@ function App() {
             <label htmlFor="control-viewsuffixes" className={`sidebar-control-container ${controls.viewsuffixes?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-viewsuffixes" checked={controls.viewsuffixes} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.viewsuffixes = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">View Suffixes</div><div className="sidebar-control"><i className="fas fa-sort-amount-down"></i></div></label>
             <label htmlFor="control-viewunits" className={`sidebar-control-container ${controls.viewunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-viewunits" checked={controls.viewunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.viewunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">View Units</div><div className="sidebar-control"><i className="fas fa-font"></i></div></label>
             <label htmlFor="control-showparenthesis" className={`sidebar-control-container ${controls.showparenthesis?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-showparenthesis" checked={controls.showparenthesis} onChange={evt => { const state = evt.target.checked; setControls(cnt => {cnt.showparenthesis=state;return {...cnt}})}}/><div className="sidebar-control_details">Show/Hide Parenthesis</div><div className="sidebar-control sidebar-control-parenthesis"><p>()</p></div></label>
-            <div className="sidebar-control-container"><div className="sidebar-control_details">Reset App</div><div className="sidebar-control"><i className="fas fa-undo-alt"></i></div></div>
+            <div className="sidebar-control-container" onClick={evt=>onResetApp()}><div className="sidebar-control_details">Reset App</div><div className="sidebar-control"><i className="fas fa-undo-alt"></i></div></div>
           </div>
 
         </div>

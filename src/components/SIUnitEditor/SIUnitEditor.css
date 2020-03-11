@@ -58,3 +58,7 @@
 .si-unit-editor-add-unit .si-unit-editor-add-button:hover{
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+.si-unit-text{
+  padding: .5rem 0.3rem;
+}

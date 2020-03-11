@@ -13,8 +13,10 @@ type TProps = {
   mustShowParenthesis: boolean,
   unitDefUtils: TUnitDefinitionUtils,
   extraClasses?: string,
+  onOpenSuffixPane: ()=>void
+  onOpenUnitPane: ()=>void
 }
-const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixUtils, unitDefUtils, mustShowParenthesis}) => {
+const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixUtils, unitDefUtils, mustShowParenthesis, onOpenSuffixPane, onOpenUnitPane}) => {
   
   let pRef1 = useRef<any>()
   useEffect(() => {
@@ -64,7 +66,7 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
             <UpDownInputContainer onNext={()=>handleNewSuffix(siunit, suffixUtils.getNext(currSuffix).exponentOf10)} 
                                   onPrevious={()=>handleNewSuffix(siunit, suffixUtils.getPrevious(currSuffix).exponentOf10)} 
             >
-                <p className={`${currSuffix === 0 ? 'text-transparent' : ''}`}>
+                <p className={`si-unit-text ${currSuffix === 0 ? 'text-transparent' : ''}`} onClick={evt=>onOpenSuffixPane()}>
                   {
                       currSuffix > 3 
                       ? toCapital(SISuffix[currSuffix]) 
@@ -81,7 +83,7 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
             <UpDownInputContainer onNext={()=>handleNewUnit(siunit, unitDefUtils.getNext(siunit.symbol).symbol)}
                                   onPrevious={()=>handleNewUnit(siunit, unitDefUtils.getPrevious(siunit.symbol).symbol)}
             >
-                 {siunit.symbol + " "}
+                 <p className="si-unit-text" onClick={evt=>onOpenUnitPane()}>{siunit.symbol + " "}</p>
             </UpDownInputContainer>
             <UpDownInput value={siunit.exponent} 
                         onChange={(val)=>handleNewExponent(siunit, parseFloat(val))} 
