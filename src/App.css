@@ -26,19 +26,36 @@
 .app-sidebar{
   min-width: 75px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
   align-items: stretch;
-  width: 80px;
-  overflow-y: auto;
+  /* width: 80px; */
+  /* overflow-y: auto;  */
+  position: relative;
 }
-.app-sidebar,.app-sidebar *{
+.app-sidebar,.app-sidebar *,
+.app-side-data-container, .app-side-data-container *{
   -webkit-transition: all .4s;
   -moz-transition: all .4s;
   -o-transition: all .4s;
   transition: all .4s;
 }
 
+
+
+
+
+.app-side-controls-container{
+  min-width: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 80px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 100;
+}
 
 .sidebar-control-container{
   display: flex;
@@ -50,11 +67,14 @@
   cursor: pointer;
   margin-bottom: .3rem;
 }
-.sidebar-control-container:hover{
+.sidebar-control-container:hover,
+.sidebar-control-container.sidebar-control-container--selected{
   background-color: var(--orange-700);
 }
 
-
+.sidebar-control-container input[type="checkbox"]{
+  display: none;
+}
 
 .sidebar-control{
   font-size: 2rem;
@@ -115,5 +135,35 @@
 
 
 
+
+
+
+
+
+
+.app-side-data-container{
+  min-width: 75px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: 100vh;
+  overflow-y: auto;
+  position: absolute;
+  background-color: #355;
+  z-index: 10;
+  right: 0;
+}
+.app-side-data-container.app-side-data-container--visible{
+  right: 100%;
+}
+.app-side-data-container .app-side-data-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .5rem;
+  border-bottom: 1px solid #eee;
+
+}
 
 

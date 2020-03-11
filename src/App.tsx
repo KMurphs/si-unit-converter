@@ -19,6 +19,14 @@ type TUiItem = {
   targetValue: TSIValue,
   author: string
 }
+type TControls = {
+  initialvalue: boolean,
+  initialunits: boolean,
+  targetunits: boolean,
+  viewsuffixes: boolean,
+  viewunits: boolean,
+  showparenthesis: boolean,
+}
 function App() {
 
   window.MathJax && console.log(window.MathJax)
@@ -27,6 +35,19 @@ function App() {
   (ac.current === null) && (ac.current = new AppController());
   const {unitsDefinitionsUtils, suffixUtils} = ac.current
   console.log('[App]: Conversion Manager Version: ', ac.current.getVersion())
+
+  const controlsDefault = {
+    initialvalue: false,
+    initialunits: false,
+    targetunits: false,
+    viewsuffixes: false,
+    viewunits: false,
+    showparenthesis: false,
+  }
+  const [controls, setControls] = useState<TControls>(controlsDefault)
+  const {showparenthesis, ..._showSideBarData} = controls
+  const showSideBarData = Object.values(_showSideBarData).reduce((acc: boolean, val: boolean)=>acc||val, false)
+
 
 
 
@@ -118,42 +139,29 @@ function App() {
           }
 
 
-
-
-
-
         </div>
 
 
 
 
         <div className="app-sidebar bg-gray-800 text-white">
-          <div className="sidebar-control-container"><div className="sidebar-control_details">Value To Convert</div><div className="sidebar-control"><i className="fas fa-sort-numeric-up"></i></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">Initial Units</div><div className="sidebar-control"><i className="fas fa-balance-scale"></i></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">Final Units</div><div className="sidebar-control"><i className="fas fa-balance-scale-right"></i></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">View Suffixes</div><div className="sidebar-control"><i className="fas fa-sort-amount-down"></i></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">View Units</div><div className="sidebar-control"><i className="fas fa-font"></i></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">Show/Hide Parenthesis</div><div className="sidebar-control sidebar-control-parenthesis"><p>()</p></div></div>
-          <div className="sidebar-control-container"><div className="sidebar-control_details">Reset App</div><div className="sidebar-control"><i className="fas fa-undo-alt"></i></div></div>
+          <div className={`app-side-data-container ${showSideBarData ? 'app-side-data-container--visible' : ''}`}>
+            {
+              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+            }
+          </div>
+          <div className="app-side-controls-container bg-gray-800">
+            <label htmlFor="control-initialunits" className={`sidebar-control-container ${controls.initialunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialunits" checked={controls.initialunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Initial Units</div><div className="sidebar-control"><i className="fas fa-balance-scale"></i></div></label>
+            <label htmlFor="control-initialvalue" className={`sidebar-control-container ${controls.initialvalue?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialvalue" checked={controls.initialvalue} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialvalue = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Value To Convert</div><div className="sidebar-control"><i className="fas fa-sort-numeric-up"></i></div></label>
+            <label htmlFor="control-targetunits" className={`sidebar-control-container ${controls.targetunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-targetunits" checked={controls.targetunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.targetunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Final Units</div><div className="sidebar-control"><i className="fas fa-balance-scale-right"></i></div></label>
+            <label htmlFor="control-viewsuffixes" className={`sidebar-control-container ${controls.viewsuffixes?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-viewsuffixes" checked={controls.viewsuffixes} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.viewsuffixes = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">View Suffixes</div><div className="sidebar-control"><i className="fas fa-sort-amount-down"></i></div></label>
+            <label htmlFor="control-viewunits" className={`sidebar-control-container ${controls.viewunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-viewunits" checked={controls.viewunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.viewunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">View Units</div><div className="sidebar-control"><i className="fas fa-font"></i></div></label>
+            <label htmlFor="control-showparenthesis" className={`sidebar-control-container ${controls.showparenthesis?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-showparenthesis" checked={controls.showparenthesis} onChange={evt => { const state = evt.target.checked; setControls(cnt => {cnt.showparenthesis=state;return {...cnt}})}}/><div className="sidebar-control_details">Show/Hide Parenthesis</div><div className="sidebar-control sidebar-control-parenthesis"><p>()</p></div></label>
+            <div className="sidebar-control-container"><div className="sidebar-control_details">Reset App</div><div className="sidebar-control"><i className="fas fa-undo-alt"></i></div></div>
+          </div>
+
         </div>
 
-        {/* <div>{uiConversion.initialValue.mantisse} 10^{uiConversion.initialValue.exponent}</div>
-        <div>{JSON.stringify(uiConversion.initialUnits.units)}</div>
-        <div>{JSON.stringify(uiConversion.initialUnits.dimension)}</div>
-        <div>{uiConversion.initialUnits.baseFactor}</div>
-
-        <div>-----------</div>
-
-        <div>{uiConversion.targetValue.mantisse} 10^{uiConversion.targetValue.exponent}</div>
-        <div>{JSON.stringify(uiConversion.targetUnits.units)}</div>
-        <div>{JSON.stringify(uiConversion.targetUnits.dimension)}</div>
-        <div>{uiConversion.targetUnits.baseFactor}</div>
-
-        <div>-----------</div>
-        <div>Conversion Performed by: {uiConversion.author}</div>
-
-        <div>-----------</div>
-        <div>{ac.current.getHistory().map(item => (<div>{JSON.stringify(item)}</div>))}</div> */}
 
     </div>
   );
