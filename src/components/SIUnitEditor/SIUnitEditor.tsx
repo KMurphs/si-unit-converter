@@ -45,6 +45,15 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
     onChange(siunit)
   }
   const toCapital = (str: string): string => str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase()
+  
+
+
+
+  const currSuffix: SISuffix = suffixUtils.getClosest(siunit.suffix/siunit.exponent).exponentOf10
+
+
+
+  console.log('[SIUnitEditor]: ',siunit, siunit.suffix, siunit.exponent, siunit.suffix/siunit.exponent, currSuffix)
 
   return (
     <div className={`si-unit-editor ${extraClasses}`}>
@@ -52,14 +61,14 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
         <div className="si-unit-mathjax" ref={pRef1}></div>
             
         <div className="si-unit-container">
-            <UpDownInputContainer onNext={()=>handleNewSuffix(siunit, suffixUtils.getNext(siunit.suffix/siunit.exponent).exponentOf10)} 
-                                  onPrevious={()=>handleNewSuffix(siunit, suffixUtils.getPrevious(siunit.suffix/siunit.exponent).exponentOf10)} 
+            <UpDownInputContainer onNext={()=>handleNewSuffix(siunit, suffixUtils.getNext(currSuffix).exponentOf10)} 
+                                  onPrevious={()=>handleNewSuffix(siunit, suffixUtils.getPrevious(currSuffix).exponentOf10)} 
             >
-                <p className={`${siunit.suffix/siunit.exponent === 0 ? 'text-transparent' : ''}`}>
+                <p className={`${currSuffix === 0 ? 'text-transparent' : ''}`}>
                   {
-                      siunit.suffix/siunit.exponent > 3 
-                      ? toCapital(SISuffix[siunit.suffix/siunit.exponent]) 
-                      : SISuffix[siunit.suffix/siunit.exponent].toLowerCase() 
+                      currSuffix > 3 
+                      ? toCapital(SISuffix[currSuffix]) 
+                      : SISuffix[currSuffix].toLowerCase() 
                   }
                 </p>
 

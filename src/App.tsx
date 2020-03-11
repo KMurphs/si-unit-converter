@@ -55,8 +55,8 @@ function App() {
 
   const [uiConversion, _setUiConversion] = useState<TUiItem>({
     initialValue: { mantisse: 1, exponent: 1 },
-    initialUnits: ac.current.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
-    targetUnits: ac.current.buildOpUnit([{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+    initialUnits: ac.current.buildOpUnit([{suffix: SISuffix.CENTI, symbol: 'm', exponent: 2},{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
+    targetUnits: ac.current.buildOpUnit([{suffix: SISuffix.CENTI, symbol: 'm', exponent: 2},{suffix: SISuffix.DECI, symbol: 's', exponent: 2}]),
     targetValue: { mantisse: 1, exponent: 1 },
     author: ""
   })
@@ -75,11 +75,11 @@ function App() {
       tmp && (curr.targetValue = {...tmp})
     }
     
-    console.log(key, curr.initialUnits)
+    console.log(key, val, curr.initialUnits)
 
     _setUiConversion({...curr})
   }
-  console.log(uiConversion.initialUnits)
+  console.log(uiConversion.initialUnits.units)
 
   const [alsoShowUnitsPane, setAlsoShowUnitsPane] = useState<boolean>(false)
   const [siunitToAdd, setSiunitToAdd] = useState<TUnitDefinition>(unitsDefinitionsUtils.getBySymbol("m"))
@@ -128,6 +128,8 @@ function App() {
                                 onChange={newVal=>{
                                   const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
                                     (index === idx) && (tmp = {...newVal});
+                                    (index !== idx) && (tmp.suffix = tmp.suffix/tmp.exponent);
+                                    console.log("[App]: ", tmp, newVal, index, idx)
                                     return tmp;
                                   })
                                   ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", uns)
@@ -216,12 +218,12 @@ function App() {
         <div className="app-sidebar bg-gray-800 text-white box-shadow">
           <div className={`app-side-data-container ${controls.initialunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
             {
-              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+              // Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
           </div>
           <div className={`app-side-data-container ${controls.targetunits && alsoShowUnitsPane ? 'app-side-data-container--visible' : ''}`}>
             {
-              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+              // Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
           </div>
 
@@ -236,8 +238,8 @@ function App() {
                 <div key={id} className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''}`}>
                   <p className="suffix-exponent">10 <span>{un.exponentOf10>0?'+':''}{un.exponentOf10}</span></p>
                   <p className="suffix-details">
-                    <p className="suffix-name">{un.exponentOf10 > 0 ? toCapital(un.name) : un.name.toLowerCase()}</p>
-                    <p className="suffix-symbol">{un.symbol}&nbsp;</p>
+                    <span className="suffix-name">{un.exponentOf10 > 0 ? toCapital(un.name) : un.name.toLowerCase()}</span>
+                    <span className="suffix-symbol">{un.symbol}&nbsp;</span>
                   </p>
                 </div>
               ))
@@ -252,8 +254,8 @@ function App() {
                 <div key={id} className="app-side-data-item app-side-data-item-unit-definition">
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
-                    <p className="definition-name">{un.name}</p>
-                    <p className="definition-measures">*{un.measurement}</p>
+                    <span className="definition-name">{un.name}</span>
+                    <span className="definition-measures">*{un.measurement}</span>
                   </p>
                 </div>
               ))

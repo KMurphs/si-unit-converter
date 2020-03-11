@@ -79,6 +79,7 @@ export type TSuffixUtils = {
   getNext: (currSuff: SISuffix) => TSuffix
   getPrevious: (currSuff: SISuffix) => TSuffix
   getByValue: (currSuff: SISuffix) => TSuffix
+  getClosest: (currSuff: SISuffix) => TSuffix
 }
 export type TUnitDefinitionUtils = {
   getAll: () => TUnitDefinition[]

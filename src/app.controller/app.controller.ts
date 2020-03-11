@@ -268,6 +268,28 @@ export default class AppController {
         }
       })
       return this.suffixes[sufIndex] 
+    },
+    getClosest: (val: number): TSuffix => {
+      let enumVals = []
+      for (let tmp in SISuffix) {
+        if (!isNaN(Number(tmp))) {
+          enumVals.push(Number(tmp))
+        }
+      }
+      enumVals.sort((a,b)=>a-b);
+      for(let item of enumVals){
+        if(val <= item){
+          val = item;
+          break
+        }
+      }
+      let sufIndex = 0
+      this.suffixes.forEach((suf, index) => {
+        if(suf.exponentOf10 === val){
+          sufIndex = index
+        }
+      })
+      return this.suffixes[sufIndex] 
     }
   }
 
