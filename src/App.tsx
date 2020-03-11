@@ -145,7 +145,27 @@ function App() {
 
 
         <div className="app-sidebar bg-gray-800 text-white">
-          <div className={`app-side-data-container ${showSideBarData ? 'app-side-data-container--visible' : ''}`}>
+          <div className={`app-side-data-container ${controls.initialunits ? 'app-side-data-container--visible' : ''}`}>
+            {
+              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+            }
+          </div>
+          <div className={`app-side-data-container ${controls.initialvalue ? 'app-side-data-container--visible' : ''}`}>
+            {
+              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+            }
+          </div>
+          <div className={`app-side-data-container ${controls.targetunits ? 'app-side-data-container--visible' : ''}`}>
+            {
+              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+            }
+          </div>
+          <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>
+            {
+              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+            }
+          </div>
+          <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
             {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
