@@ -8,6 +8,7 @@ import { SISuffix } from './app.controller/app.native.data';
 import SIValueEditor from './components/SIValueEditor/SIValueEditor';
 import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
 import Conversion from './components/Conversion/Conversion';
+import { toCapital } from './components/mathjax.utils';
 
 declare global {
   interface Window { MathJax: any; }
@@ -165,21 +166,35 @@ function App() {
           <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>
             {
               suffixUtils.getAll().map((un, id) => (
-                <div key={id} className="app-side-data-item app-side-data-item-suffix">
-                  <p className="suffix-symbol">{un.symbol}&nbsp;</p>
+                <div key={id} className={`app-side-data-item app-side-data-item-suffix ${un.exponentOf10 === 0?'app-side-data-item-suffix--disabled':''}`}>
+                  <p className="suffix-exponent">10 <span>{un.exponentOf10>0?'+':''}{un.exponentOf10}</span></p>
                   <p className="suffix-details">
-                    <span className="suffix-name">{un.name}</span>
-                    <span className="suffix-exponent">10 <span>{un.exponentOf10}</span></span>
+                    <p className="suffix-name">{un.exponentOf10 > 0 ? toCapital(un.name) : un.name.toLowerCase()}</p>
+                    <p className="suffix-symbol">{un.symbol}&nbsp;</p>
                   </p>
                 </div>
               ))
             }
           </div>
+
+
+
           <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
             {
-              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+              unitsDefinitionsUtils.getAll().map((un, id) => (
+                <div key={id} className="app-side-data-item app-side-data-item-unit-definition">
+                  <p className="definition-symbol">{un.symbol}</p>
+                  <p className="definition-details">
+                    <p className="definition-name">{un.name}</p>
+                    <p className="definition-measures">*{un.measurement}</p>
+                  </p>
+                </div>
+              ))
             }
           </div>
+
+
+
           <div className="app-side-controls-container bg-gray-800">
             <label htmlFor="control-initialunits" className={`sidebar-control-container ${controls.initialunits?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialunits" checked={controls.initialunits} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialunits = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Initial Units</div><div className="sidebar-control"><i className="fas fa-balance-scale"></i></div></label>
             <label htmlFor="control-initialvalue" className={`sidebar-control-container ${controls.initialvalue?'sidebar-control-container--selected':''}`}><input type="checkbox" id="control-initialvalue" checked={controls.initialvalue} onChange={evt => { let state = {...controlsDefault}; state.showparenthesis = controls.showparenthesis; state.initialvalue = evt.target.checked; setControls(state)}}/><div className="sidebar-control_details">Value To Convert</div><div className="sidebar-control"><i className="fas fa-sort-numeric-up"></i></div></label>

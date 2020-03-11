@@ -43,9 +43,8 @@ const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixU
     }
     onChange(siunit)
   }
-  const toCapital = (str: string): string => {
-    return str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase()
-  }
+  const toCapital = (str: string): string => str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase()
+
   return (
     <div className={`si-unit-editor ${extraClasses}`}>
 

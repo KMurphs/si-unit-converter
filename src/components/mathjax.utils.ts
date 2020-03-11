@@ -63,8 +63,8 @@ const buildMathJaxDimension = (dimensionSymbol: string, dimensionExponent: numbe
 
   return tmp
 }
+const toCapital = (str: string): string => str.substr(0,1).toUpperCase() + str.substr(1).toLowerCase()
 
 
 
-
-export {buildMathJaxUnits, buildMathJaxUnit, buildMathJaxDimensions}
+export {buildMathJaxUnits, buildMathJaxUnit, buildMathJaxDimensions, toCapital}
