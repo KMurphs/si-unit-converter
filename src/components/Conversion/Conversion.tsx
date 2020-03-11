@@ -11,10 +11,11 @@ type TProps = {
   targetValue: TSIValue,
   initialUnits: TOpUnit,
   targetUnits: TOpUnit,
+  mustShowParenthesis: boolean,
   getSuffix: (suff: SISuffix) => TSuffix
   extraClasses?: string,
 }
-const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, initialUnits, targetUnits, getSuffix}) => {
+const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, initialUnits, targetUnits, getSuffix, mustShowParenthesis}) => {
   
   let pRef_start = useRef<any>()
   let pRef_equal = useRef<any>()
@@ -22,13 +23,12 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
   let dRef_start = useRef<any>()
   let dRef_equal = useRef<any>()
   let dRef_final = useRef<any>()
-  const mustShowParenthesis = true
   const dimensionsMatch = JSON.stringify(initialUnits.dimension) === JSON.stringify(targetUnits.dimension)
   useEffect(() => {
 
-    pRef_start.current && (pRef_start.current.innerHTML = `\`${initialValue.mantisse}&nbsp;10^(${initialValue.exponent})&nbsp;${buildMathJaxUnits(initialUnits.units, mustShowParenthesis, getSuffix)}\``);
+    pRef_start.current && (pRef_start.current.innerHTML = `\`${initialValue.mantisse}&nbsp;*&nbsp;10^(${initialValue.exponent})&nbsp;${buildMathJaxUnits(initialUnits.units, mustShowParenthesis, getSuffix)}\``);
     pRef_equal.current && (pRef_equal.current.innerHTML = `\`=\``);
-    pRef_final.current && (pRef_final.current.innerHTML = `\`${targetValue.mantisse}&nbsp;10^(${targetValue.exponent})&nbsp;${buildMathJaxUnits(targetUnits.units, mustShowParenthesis, getSuffix)}\``);
+    pRef_final.current && (pRef_final.current.innerHTML = `\`${targetValue.mantisse}&nbsp;*&nbsp;10^(${targetValue.exponent})&nbsp;${buildMathJaxUnits(targetUnits.units, mustShowParenthesis, getSuffix)}\``);
 
     window.MathJax && window.MathJax.typeset && window.MathJax.typeset()
   });
@@ -51,13 +51,13 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
         <div ref={pRef_final} className="mathjax-item"></div>
       </div>
 
+
+      <div className="si-conversion-dimension-title">Dimensions</div>
       <div className={`si-conversion-dimension ${dimensionsMatch?'text-green-700':'text-red-800'}`}>
         <div ref={dRef_start} className="mathjax-item"></div>
         <div ref={dRef_equal}></div>
         <div ref={dRef_final} className="mathjax-item"></div>
       </div>
-
-
       <div className={`si-conversion-match`}>
         {
           !dimensionsMatch && (

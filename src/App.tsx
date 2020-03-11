@@ -87,13 +87,14 @@ function App() {
     <div className="App d-flex-row">
 
         <div className="app-container bg-red-100">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas unde tempora adipisci qui, exercitationem fuga vel at recusandae placeat labore dicta odit? Blanditiis aut voluptatem dicta ipsum velit qui iure voluptatibus non, cupiditate nihil consectetur quod reiciendis laudantium, illo at et vitae. Nihil quis rerum tenetur vel possimus voluptate commodi vero eius nemo voluptas quos magni voluptatum eligendi consectetur, enim odit adipisci dicta repellat. Provident quae culpa eaque suscipit deserunt sequi temporibus sed placeat quia et, quam quibusdam esse qui, voluptatem expedita deleniti dicta. Repudiandae aut totam reprehenderit voluptatibus consectetur praesentium animi accusantium natus a! Provident enim vel minima impedit.</p>
+          {/* <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas unde tempora adipisci qui, exercitationem fuga vel at recusandae placeat labore dicta odit? Blanditiis aut voluptatem dicta ipsum velit qui iure voluptatibus non, cupiditate nihil consectetur quod reiciendis laudantium, illo at et vitae. Nihil quis rerum tenetur vel possimus voluptate commodi vero eius nemo voluptas quos magni voluptatum eligendi consectetur, enim odit adipisci dicta repellat. Provident quae culpa eaque suscipit deserunt sequi temporibus sed placeat quia et, quam quibusdam esse qui, voluptatem expedita deleniti dicta. Repudiandae aut totam reprehenderit voluptatibus consectetur praesentium animi accusantium natus a! Provident enim vel minima impedit.</p> */}
           <div className="current-conversion">
             <Conversion initialValue={uiConversion.initialValue}
                         targetValue={uiConversion.targetValue}
                         initialUnits={uiConversion.initialUnits}
                         targetUnits={uiConversion.targetUnits}
                         getSuffix={suffixUtils.getByValue}
+                        mustShowParenthesis={showparenthesis}
             />
           </div>
 
@@ -108,6 +109,7 @@ function App() {
                               key={index}
                               suffixUtils={suffixUtils}
                               unitDefUtils={unitsDefinitionsUtils}
+                              mustShowParenthesis={showparenthesis}
                               onChange={newVal=>{
                                 const uns = uiConversion.initialUnits.units.map((tmp, idx) => {
                                   (index === idx) && (tmp = {...newVal});
@@ -127,6 +129,7 @@ function App() {
                               key={index}
                               suffixUtils={suffixUtils}
                               unitDefUtils={unitsDefinitionsUtils}
+                              mustShowParenthesis={showparenthesis}
                               onChange={newVal=>{
                                 const uns = uiConversion.targetUnits.units.map((tmp, idx) => {
                                   (index === idx) && (tmp = {...newVal});
@@ -141,6 +144,8 @@ function App() {
 
 
         </div>
+
+
 
 
 
@@ -161,6 +166,10 @@ function App() {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
           </div>
+
+
+
+
 
 
           <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>

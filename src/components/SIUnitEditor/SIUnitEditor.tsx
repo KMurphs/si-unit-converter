@@ -10,14 +10,15 @@ type TProps = {
   siunit: TUnit,
   onChange: (newVal: TUnit)=>void,
   suffixUtils: TSuffixUtils,
+  mustShowParenthesis: boolean,
   unitDefUtils: TUnitDefinitionUtils,
   extraClasses?: string,
 }
-const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixUtils, unitDefUtils}) => {
+const SIUnitEditor: React.FC<TProps> = ({siunit, onChange, extraClasses, suffixUtils, unitDefUtils, mustShowParenthesis}) => {
   
   let pRef1 = useRef<any>()
   useEffect(() => {
-    let mathjaxexpression = buildMathJaxUnit(siunit.symbol, suffixUtils.getByValue(siunit.suffix/siunit.exponent), siunit.exponent, true);
+    let mathjaxexpression = buildMathJaxUnit(siunit.symbol, suffixUtils.getByValue(siunit.suffix/siunit.exponent), siunit.exponent, mustShowParenthesis);
     siunit.exponent < 0 && (mathjaxexpression = `(1)/(${mathjaxexpression})`)
     pRef1.current && (pRef1.current.innerHTML = `\`${mathjaxexpression}\``);
     window.MathJax && window.MathJax.typeset && window.MathJax.typeset()

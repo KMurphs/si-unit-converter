@@ -17,7 +17,8 @@ const buildMathJaxUnits = (units: TUnit[], addParenthesis: boolean, getSuffixByV
     unit.exponent >= 0 && (num = num + buildMathJaxUnit(unit.symbol, getSuffixByValue(unit.suffix/unit.exponent), unit.exponent, addParenthesis));
     unit.exponent < 0 &&  (den = den + buildMathJaxUnit(unit.symbol, getSuffixByValue(unit.suffix/unit.exponent), unit.exponent, addParenthesis));
   })
-  return `(${num === '' ? '1' : num})${den === '' ? '' : `/(${den})`}`
+  // return `(${num === '' ? '1' : num})${den === '' ? '' : `/(${den})`}`
+  return `${den === '' ? `${num === '' ? '1' : num}` : `(${num === '' ? '1' : num})/(${den})`}`
 }
 
 const buildMathJaxUnit = (unitSymbol: string, unitSuffix: TSuffix, unitExponent: number, addParenthesis: boolean):string => {
