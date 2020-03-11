@@ -238,6 +238,9 @@ export default class AppController {
 
 
   suffixUtils: TSuffixUtils = {
+    getAll: (): TSuffix[]=>{
+      return [...this.suffixes]
+    },
     getPrevious: (currSuf: SISuffix): TSuffix => {
       let prevSufIndex = 0
       this.suffixes.forEach((suf, index) => {
@@ -271,6 +274,9 @@ export default class AppController {
 
 
   unitsDefinitionsUtils: TUnitDefinitionUtils = {
+    getAll: (): TUnitDefinition[]=>{
+      return [...this.unitsDefinitions]
+    },
     getPrevious: (currSymbol: string): TUnitDefinition => {
       let prevDefIndex = 0
       this.unitsDefinitions.forEach((def, index) => {

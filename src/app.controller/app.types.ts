@@ -75,11 +75,13 @@ export type TSuffix = {
 
 
 export type TSuffixUtils = {
+  getAll: () => TSuffix[]
   getNext: (currSuff: SISuffix) => TSuffix
   getPrevious: (currSuff: SISuffix) => TSuffix
   getByValue: (currSuff: SISuffix) => TSuffix
 }
 export type TUnitDefinitionUtils = {
+  getAll: () => TUnitDefinition[]
   getNext: (currSymbol: string) => TUnitDefinition
   getPrevious: (currSymbol: string) => TUnitDefinition
   getBySymbol: (currSymbol: string) => TUnitDefinition

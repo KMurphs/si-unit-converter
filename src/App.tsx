@@ -46,7 +46,7 @@ function App() {
   }
   const [controls, setControls] = useState<TControls>(controlsDefault)
   const {showparenthesis, ..._showSideBarData} = controls
-  const showSideBarData = Object.values(_showSideBarData).reduce((acc: boolean, val: boolean)=>acc||val, false)
+  // const showSideBarData = Object.values(_showSideBarData).reduce((acc: boolean, val: boolean)=>acc||val, false)
 
 
 
@@ -160,9 +160,11 @@ function App() {
               Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
             }
           </div>
+
+
           <div className={`app-side-data-container ${controls.viewsuffixes ? 'app-side-data-container--visible' : ''}`}>
             {
-              Array(100).fill(1).map((it, id) => (<div className="app-side-data-item"><p>{id}</p></div>))
+              suffixUtils.getAll().map((un, id) => (<div key={id} className="app-side-data-item app-side-data-item-suffix"><p className="suffix-symbol">{un.symbol}&nbsp;</p><p className="suffix-details"><span className="suffix-name">{un.name}</span><span className="suffix-exponent">10 <span>{un.exponentOf10}</span></span></p></div>))
             }
           </div>
           <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
