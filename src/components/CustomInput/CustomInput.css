@@ -1,0 +1,64 @@
+.custom-input {
+    position: relative;
+}
+
+.custom-input::before,
+.custom-input::after {
+    content: '';
+    height: 1px;
+    border: none;
+    background: #999;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    left: 0;
+}
+
+.custom-input::after {
+    transform: scaleX(0);
+    height: 2px;
+    background: #555;
+}
+
+.custom-input:not(.custom-input--disabled):hover::after {
+    transform: scaleX(1);
+}
+
+.custom-input input {
+    padding: 0.5rem .5rem;
+    font-size: .9rem;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    width: 100%;
+    padding-right: 2rem
+}
+
+.custom-input input:active {
+    outline: none;
+}
+
+.custom-input .pen-icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 0;
+    height: 100%;
+    color: #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-input:hover .pen-icon {
+    color: #555;
+}
+
+.custom-input.custom-input--disabled .disabling-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 40, 0.5);
+    z-index: 100;
+}

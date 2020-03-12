@@ -10,6 +10,9 @@ import SIUnitEditor from './components/SIUnitEditor/SIUnitEditor';
 import Conversion from './components/Conversion/Conversion';
 import { toCapital } from './components/mathjax.utils';
 import SlideUpPane, { UpDownInputContainer } from './components/SlideUpPane/SlideUpPane';
+import Modal from './components/Modal/Modal';
+import { CustomInputText } from './components/CustomInput/CustomInput';
+import SIDefinitionEditor from './components/SIDefinitionEditor/SIDefinitionEditor';
 
 declare global {
   interface Window { MathJax: any; }
@@ -136,8 +139,21 @@ function App() {
   
   
   
-  
-  
+  const [definitionToEdit, setDefinitionToEdit] = useState<TUnitDefinition|null>(null)
+  const emptyUnitDefinition: TUnitDefinition = {
+    symbol: '',
+    name: '',
+    description: '',
+    measurement: '',
+    components: {
+      factor: 1,
+      units: []
+    },
+    isBasicDimension: {
+      value: false,
+      symbol: ''
+    }
+  }
   
   
   
@@ -346,14 +362,17 @@ function App() {
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
                     <span className="definition-name">{un.name}   </span>
-                    <span className="definition-view"><i className="fas fa-eye"></i></span>
+                    <span className="definition-view" onClick={evt=>{evt.stopPropagation();evt.preventDefault();setDefinitionToEdit({...un})}}><i className="fas fa-eye"></i></span>
                     <span className="definition-measures">*{un.measurement}</span>
                   </p>
                 </div>
               ))
             }
-            <div className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
+            <div onClick={evt=>setDefinitionToEdit({...emptyUnitDefinition})} className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
           </div>
+          <Modal isActive={definitionToEdit!==null} onDeactivate={()=>setDefinitionToEdit(null)} extraClasses={"top-z-index"}>
+            {definitionToEdit!==null && (<SIDefinitionEditor definition={definitionToEdit} onChange={(def)=>setDefinitionToEdit({...def})} onSave={()=>{}}/>)}
+          </Modal>
 
 
 

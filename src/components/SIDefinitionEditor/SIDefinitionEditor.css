@@ -1,0 +1,72 @@
+.definition-page{
+  background-color: #eee;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  max-height: 90vh;
+  max-width: 90vw;
+}
+
+.definition-page h1{
+  font-size: 1.5rem;
+  color: var(--orange-700);
+  margin-bottom: 2rem;
+}
+
+.definition-id{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.definition-id > div:first-of-type{
+  width: calc(100% - 5rem - 1rem);
+  /* width: calc(70%); */
+}
+.definition-id > div:nth-of-type(2){
+  width: 5rem;
+}
+
+.definition-page-group{
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-items: stretch;
+}
+.definition-page-group > span{
+  text-align: left;
+  font-size: .8rem;
+  margin-bottom: .3rem;
+  color: var(--gray-500);
+}
+
+
+.definition-docs{
+  margin-bottom: 2rem;
+}
+.definition-docs textarea{
+  min-height: 6rem;
+  padding: .5rem;
+}
+
+
+.definition-save{
+  border: none;
+  margin-top: 2rem;
+  background-color: var(--gray-800);
+  padding: .7rem 1rem;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+}
+@media (min-width: 768px){
+  .definition-save:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+}
+
+
+.definition-composition .text-black *{
+  color: var(--orange-700) !important;
+}

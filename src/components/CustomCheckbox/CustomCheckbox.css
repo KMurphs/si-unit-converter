@@ -1,0 +1,61 @@
+.custom-checkbox-container {
+    display: flex;
+    cursor: pointer;
+    width: 100%;
+    background-color: #f2f2f2;
+    border: 1px solid #6b6363;
+    border-radius: 3px;
+}
+
+.custom-checkbox-container--checked {
+    background-color: #c8eac8;
+    border: 1px solid green;
+}
+
+.custom-checkbox-container input[type=checkbox] {
+    display: none;
+}
+
+.custom-checkbox-background {
+    width: 40px;
+    height: 10px;
+    background: #555;
+    margin: 20px;
+    position: relative;
+    border-radius: 3px;
+}
+
+.custom-checkbox-background span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: all .5s ease;
+    cursor: pointer;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    background: #ccc;
+}
+
+.custom-checkbox-container p {
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox-container input[type=checkbox]:checked~p span:nth-child(2) {
+    display: none;
+}
+
+.custom-checkbox-container input[type=checkbox]:checked~p span:nth-child(3) {
+    display: inline;
+}
+
+.custom-checkbox-container input[type=checkbox]~p span:nth-child(3) {
+    display: none;
+}
+
+.custom-checkbox-container input[type=checkbox]:checked+.custom-checkbox-background span {
+    left: 27px;
+    background: green;
+}
