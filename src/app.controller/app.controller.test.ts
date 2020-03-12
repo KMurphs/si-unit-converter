@@ -117,6 +117,29 @@ describe("AppController", ()=>{
 
 
 
+    const defineNewton = true
+    const error = new Error("Definition with this symbol already exists");
+    defineNewton && expect(()=>mc.addDefinition({
+      name: "Newton",
+      symbol: 'N',
+      description: "",
+      measurement: "Force",
+      isBasicDimension: {
+        value: true,
+        symbol: 'L'
+      },
+      components: {
+        factor: 1,
+        units: [
+          { suffix: SISuffix.KILO, symbol: 'g', exponent: 1 },
+          { suffix: SISuffix.UNITY, symbol: 'm', exponent: 1 },
+          { suffix: SISuffix.UNITY, symbol: 's', exponent: -2 }
+        ]
+      }
+    })).toThrow(error);
+
+
+    
     opUnit = mc.buildOpUnit([{suffix: SISuffix.MILLI, symbol: 's', exponent: -2.5},{suffix: SISuffix.NANO, symbol: 'N', exponent: 1.5},{suffix: SISuffix.CENTI, symbol: 's', exponent: 1.5}])
     console.log(opUnit)
     expect(opUnit.units.length).toBe(2);
@@ -135,6 +158,24 @@ describe("AppController", ()=>{
     expect(opUnit.dimension[2]).toHaveProperty('exponent', -4);  
     expect(opUnit.baseFactor).toBe(Math.pow(10, -4.5));  
 
+
+
+
+    opUnit = mc.buildOpUnit([{suffix: 0, symbol: 'N', exponent: 1},{suffix: -1, symbol: 's', exponent: 2}])
+    console.log(opUnit)
+    expect(opUnit.units.length).toBe(2);
+    expect(opUnit.units[0]).toHaveProperty('symbol', 'N');
+    expect(opUnit.units[0]).toHaveProperty('exponent', 1);
+    expect(opUnit.units[0]).toHaveProperty('suffix', 0);
+    expect(opUnit.units[1]).toHaveProperty('symbol', 's');
+    expect(opUnit.units[1]).toHaveProperty('exponent', 2);
+    expect(opUnit.units[1]).toHaveProperty('suffix', -2);
+    expect(opUnit.dimension.length).toBe(2);
+    expect(opUnit.dimension[0]).toHaveProperty('symbol', 'L');
+    expect(opUnit.dimension[0]).toHaveProperty('exponent', 1); 
+    expect(opUnit.dimension[1]).toHaveProperty('symbol', 'M');
+    expect(opUnit.dimension[1]).toHaveProperty('exponent', 1); 
+    // expect(opUnit.baseFactor).toBe(Math.pow(10, -4.5));  
   })
 
 

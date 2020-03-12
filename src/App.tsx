@@ -11,7 +11,6 @@ import Conversion from './components/Conversion/Conversion';
 import { toCapital } from './components/mathjax.utils';
 import SlideUpPane, { UpDownInputContainer } from './components/SlideUpPane/SlideUpPane';
 import Modal from './components/Modal/Modal';
-import { CustomInputText } from './components/CustomInput/CustomInput';
 import SIDefinitionEditor from './components/SIDefinitionEditor/SIDefinitionEditor';
 import AddSIUnitButton from './components/SIUnitEditor/AddSIUnitButton';
 
@@ -82,7 +81,7 @@ function App() {
 
     _setUiConversion({...curr})
   }
-  console.log(uiConversion.initialUnits.units)
+  console.log(uiConversion.initialUnits.units, uiConversion.initialUnits.dimension)
 
 
 
@@ -128,32 +127,23 @@ function App() {
   let onPaneItemClick = useRef<Function|null>(null)
   
   
-  
-  
-  
-  
+
   
   const [definitionToEdit, setDefinitionToEdit] = useState<TUnitDefinition|null|undefined>(null)
-  const emptyUnitDefinition: TUnitDefinition = {
-    symbol: '',
-    name: '',
-    description: '',
-    measurement: '',
-    components: {
-      factor: 1,
-      units: []
-    },
-    isBasicDimension: {
-      value: false,
-      symbol: ''
-    }
-  }
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   
   

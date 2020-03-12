@@ -92,8 +92,7 @@ export default class AppController {
     if(Object.keys(unitsToBeProcessed).length !== 0){
       throw new Error(`Unknown Units Found: ${JSON.stringify(unitsToBeProcessed)}`);
     }
-    
-    
+
 
     //Collect Dimensions
     let collectDimensions = (rawUnit: TUnit[], dict: {[key: string]: number}): {[key: string]: number} => {
@@ -107,23 +106,25 @@ export default class AppController {
         let currDef = this.unitsDefinitions.filter(def => def.symbol === currUnit.symbol)[0];
 
         // If we found a basic dimension, collect it along with its exponent
-        currDef && currDef.isBasicDimension.value === true && dict[currDef.isBasicDimension.symbol] && (dict[currDef.isBasicDimension.symbol] = dict[currDef.isBasicDimension.symbol] + currUnit.exponent);
-        currDef && currDef.isBasicDimension.value === true && !dict[currDef.isBasicDimension.symbol] && (dict[currDef.isBasicDimension.symbol] = currUnit.exponent);
+        const isNewDimension = dict[currDef.isBasicDimension.symbol] === undefined
+        currDef && currDef.isBasicDimension.value === true && !isNewDimension && (dict[currDef.isBasicDimension.symbol] = dict[currDef.isBasicDimension.symbol] + currUnit.exponent);
+        currDef && currDef.isBasicDimension.value === true && isNewDimension  && (dict[currDef.isBasicDimension.symbol] = currUnit.exponent);
         currDef && currDef.isBasicDimension.value === true && (dict["factor"] *= Math.pow(10, currUnit.suffix)); //Suffix already has accumulated the exponent from above
 
-
+        
         // If we found a composite unit, extract component into raw dimensions to be processed in later recursion cycles
         currDef && currDef.isBasicDimension.value !== true && (_rawUnit = [
           ..._rawUnit, 
           ...currDef.components.units.map(un => {
-            un.exponent *= currUnit.exponent
-            un.suffix *= currUnit.exponent
-            return un
+            let tmp = {...un}
+            tmp.exponent *= currUnit.exponent
+            tmp.suffix *= currUnit.exponent
+            return tmp
           })
         ])
         currDef && currDef.isBasicDimension.value !== true && (dict["factor"] *= currDef.components.factor * Math.pow(10, currUnit.suffix))
 
-        
+
         return collectDimensions(_rawUnit, dict)
       }else{
         return dict
@@ -133,18 +134,17 @@ export default class AppController {
 
 
 
-    let validUnits = Object.keys(unitsWithKnownDefinition).sort().map(key => unitsWithKnownDefinition[key])
+    let validUnits = Object.keys(unitsWithKnownDefinition).sort().map(key => {return {...unitsWithKnownDefinition[key]}})
     let dimensionsDict: {[key: string]: number} = collectDimensions(validUnits,  {})
     let factor = dimensionsDict["factor"]
     delete dimensionsDict["factor"]
-    let dimensions = Object.keys(dimensionsDict).sort().map(key => { return { symbol: key, exponent: dimensionsDict[key] }})
-
+    let dimensions = Object.keys(dimensionsDict).sort().map(key => { return { symbol: key, exponent: dimensionsDict[key] }}).filter(dim => dim.exponent !== 0)
 
 
     // Build Object
     const unit: TOpUnit = {
-      units: validUnits,
-      dimension: dimensions,
+      units: [...validUnits],
+      dimension: [...dimensions],
       baseFactor: factor
     }
 
@@ -159,7 +159,7 @@ export default class AppController {
 
   hasDefinitionFor(unitSymbol: string): TUnitDefinition|null{
     const def = this.unitsDefinitions.filter(def => def.symbol === unitSymbol)[0]
-    return def ? def : null
+    return def ? {...def} : null
   }
 
   addDefinition(newDef: TUnitDefinition, isBasicDimension?: boolean): Promise<TUnitDefinition>{
@@ -192,7 +192,7 @@ export default class AppController {
     // save definition to storage
     return new Promise((resolve, reject) => {
       this.storage.saveDefinitions()
-      resolve(this.unitsDefinitions.filter(def => def.symbol === newDef.symbol)[0])
+      resolve({...this.unitsDefinitions.filter(def => def.symbol === newDef.symbol)[0]})
     })
 
   }
