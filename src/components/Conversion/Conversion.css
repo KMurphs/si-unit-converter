@@ -23,8 +23,16 @@
 }
 
 .mathjax-item--result{
-  transform: scale(1.7);
+  transform: scale(1.2);
   color: var(--orange-700);
+}
+.mathjax-item--grayed{
+  color: var(--gray-500);
+}
+@media (min-width: 400px){
+  .mathjax-item--result{
+    transform: scale(1.7);
+  }
 }
 .si-conversion-display .mathjax-item{
   margin-top: 1rem;

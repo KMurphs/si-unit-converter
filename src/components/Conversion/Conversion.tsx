@@ -48,7 +48,7 @@ const Conversion: React.FC<TProps> = ({initialValue, targetValue, extraClasses, 
       <div className={`si-conversion-display`}>
         <div ref={pRef_start} className="mathjax-item"></div>
         <div ref={pRef_equal} className="mathjax-item"></div>
-        <div ref={pRef_final} className="mathjax-item mathjax-item--result"></div>
+        <div ref={pRef_final} className={`mathjax-item mathjax-item--result ${dimensionsMatch?'':'mathjax-item--grayed'}`}></div>
       </div>
 
 

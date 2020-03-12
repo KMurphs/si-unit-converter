@@ -144,7 +144,7 @@ function App() {
 
 
 
-  
+
   
   
   return (
@@ -344,19 +344,20 @@ function App() {
             }
             <div onClick={evt=>setDefinitionToEdit(undefined)} className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
           </div>
-          <Modal isActive={definitionToEdit!==null} onDeactivate={()=>setDefinitionToEdit(null)} extraClasses={"top-z-index"}>
-            {
-              definitionToEdit!==null && ac.current && (
+          {
+            definitionToEdit!==null && ac.current && (
+              <Modal isActive={definitionToEdit!==null} onDeactivate={()=>setDefinitionToEdit(null)} extraClasses={"top-z-index"}>
                 <SIDefinitionEditor definition={definitionToEdit} 
                                     onChange={(def)=>setDefinitionToEdit({...def})} 
-                                    onSave={(def)=>{ac.current && ac.current.addDefinition({...def}); setDefinitionToEdit(null)}}
+                                    onSave={(def, isNew)=>{ac.current && isNew && ac.current.addDefinition({...def}); setDefinitionToEdit(null)}}
                                     suffixUtils={suffixUtils}
                                     unitDefUtils={unitsDefinitionsUtils}
                                     mustShowParenthesis={showparenthesis}
                 />
-              )
-            }
-          </Modal>
+              </Modal>
+            )
+          }
+          
 
 
 
