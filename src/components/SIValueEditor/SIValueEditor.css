@@ -1,4 +1,16 @@
 
+.si-value-container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  
+}
+.si-value-container input{
+  color: white;
+}
+
+
 .si-value-editor{
   /* margin-top: 5rem; */
   display: flex;
@@ -11,7 +23,7 @@
   font-size: 1.5rem;
   margin: 0 .5rem;
   position: relative;
-  color: #666;
+  color: var(--orange-500);
   top: -.2rem;
 }
 
@@ -21,9 +33,9 @@
 }
 
 .si-value-title{
-  margin: 1rem auto;
+  /* margin: 1rem auto; */
   padding: .5rem 1rem;
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
 }
 .si-value-title h3{
   font-size: .9rem;

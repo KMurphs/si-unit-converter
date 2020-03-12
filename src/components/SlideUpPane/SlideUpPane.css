@@ -12,8 +12,10 @@
   -moz-transition: all .4s;
   -o-transition: all .4s;
   transition: all .4s;
-  
+  background-color: var(--orange-700);
+  color: white !important;
 }
+
 .bottom-pane.bottom-pane--visible{
   bottom: 0;
   -webkit-transition: all .4s;

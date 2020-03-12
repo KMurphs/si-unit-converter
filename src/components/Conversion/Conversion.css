@@ -24,6 +24,7 @@
 
 .mathjax-item--result{
   transform: scale(1.7);
+  color: var(--orange-700);
 }
 .si-conversion-display .mathjax-item{
   margin-top: 1rem;

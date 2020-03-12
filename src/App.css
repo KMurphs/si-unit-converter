@@ -15,23 +15,39 @@
 
 .app-container{
   flex-grow: 1;
-  margin-right: 80px;
+  
   padding: .5rem;
   position: relative;
   overflow-y: hidden;
   height: 100vh;
-  max-width: 700px;
-  margin: 0 auto;
+  max-width: 768px;
+  margin: 0;
+  margin-right: 80px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   overflow-x: hidden;
+}
+.app-container h1{
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+  color: var(--orange-700);
+  font-family: sans-serif;
 }
 @media (min-width: 768px){
   .app-container{
     padding: 2rem;
     padding-top: 5rem;
   }
+  .app-container h1{
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
 }
-
+@media (min-width: 928px){
+  .app-container{
+    margin: 0 auto;
+  }
+}
 
 
 
@@ -89,9 +105,14 @@
   cursor: pointer;
   margin-bottom: .3rem;
 }
-.sidebar-control-container:hover,
+
 .sidebar-control-container.sidebar-control-container--selected{
   background-color: var(--orange-700);
+}
+@media (min-width: 768px){
+  .sidebar-control-container:hover{
+    background-color: var(--orange-700);
+  }
 }
 
 .sidebar-control-container input[type="checkbox"]{
@@ -118,10 +139,12 @@
   margin-top: .5rem;
   color: #bababa;
 }
-.app-sidebar .sidebar-control-container:hover .sidebar-control_details{
-  color: var(--orange-300) !important;
-}
 
+@media (min-width: 768px){
+  .app-sidebar .sidebar-control-container:hover .sidebar-control_details{
+    color: var(--orange-300) !important;
+  }
+}
 
 
 
@@ -210,19 +233,26 @@
   background-color: var(--gray-800);
   background-color: white;
   color: #333;
-  padding: 1rem 1rem;
+  padding: 1.5rem 1.5rem;
   position: relative;
+  cursor: pointer;
 }
 .app-side-data-item.app-side-data-item-suffix.app-side-data-item-suffix--disabled{
   background-color: rgba(0,0,0,0.3);
 }
-.app-side-data-item.app-side-data-item-suffix.app-side-data-item-suffix--active,
-.app-side-data-item.app-side-data-item-suffix:hover{
+.app-side-data-item.app-side-data-item-suffix.app-side-data-item-suffix--active{
   background-color: var(--gray-700);
 }
-.app-side-data-item.app-side-data-item-suffix.app-side-data-item-suffix--active .suffix-name,
-.app-side-data-item.app-side-data-item-suffix:hover .suffix-name{
+.app-side-data-item.app-side-data-item-suffix.app-side-data-item-suffix--active .suffix-name{
   color:white;
+}
+@media (min-width: 768px){
+  .app-side-data-item.app-side-data-item-suffix:hover .suffix-name{
+    color:white;
+  }
+  .app-side-data-item.app-side-data-item-suffix:hover{
+    background-color: var(--gray-700);
+  }
 }
 .suffix-exponent{
   display: flex;
@@ -280,6 +310,12 @@
 
 
 
+
+
+
+
+
+
 .app-side-data-item.app-side-data-item-unit-definition{
   display: flex;
   align-items: flex-end;
@@ -289,18 +325,32 @@
   background-color: var(--gray-800);
   background-color: white;
   color: #333;
-  padding: 1rem 1rem;
+  padding: 1.5rem 1.5rem;
   position: relative;
+  cursor: pointer;
 }
-.app-side-data-item.app-side-data-item-unit-definition:hover,
+
+@media (min-width: 768px){
+  .add-definition:hover {
+    background-color: rgba(0,0,0,0.1);
+  }
+}
 .app-side-data-item.app-side-data-item-unit-definition.app-side-data-item-unit-definition--active{
   background-color: var(--gray-700);
 }
-.app-side-data-item.app-side-data-item-unit-definition:hover .definition-measures,
+
 .app-side-data-item.app-side-data-item-unit-definition.app-side-data-item-unit-definition--active .definition-measures{
   color: #999;
 }
-.definition-symbol{
+@media (min-width: 768px){
+  .app-side-data-item.app-side-data-item-unit-definition:hover .definition-measures{
+    color: #999;
+  }
+  .app-side-data-item.app-side-data-item-unit-definition:hover{
+    background-color: var(--gray-700);
+  }
+}
+.definition-symbol, .add-definition div{
   display: flex;
   font-weight: bold;
   color: var(--orange-700);
@@ -311,17 +361,46 @@
   align-items: baseline;
   /* color: #ccc; */
 }
-.definition-details{
+.add-definition div{
+  width: 4rem;
+}
+
+.definition-details, .add-definition p{
   display: flex;
   line-height: 1.8;
   width: 5rem;
 }
+.add-definition p,
+.definition-view,
 .definition-name{
   font-weight: bold;
   letter-spacing: .02rem;
   color: #999;
+}
+.definition-name{
   position: absolute;
   top: .8rem;
+}
+.definition-view{
+  position: absolute;
+  top: .8rem;
+  right: .7rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  background-color: rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+@media (min-width: 768px){
+  .definition-view:hover{
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+.add-definition p{
+  /* line-height: 1.4; */
+  line-height: 2;
 }
 .definition-measures{
   font-size: .7rem;

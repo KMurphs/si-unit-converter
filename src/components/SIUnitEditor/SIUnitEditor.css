@@ -10,6 +10,9 @@
   /* margin-left: 1rem; */
   transform: scale(.8);
 }
+.si-unit-container input{
+  color: white !important;
+}
 .si-unit-editor .si-unit-exponent{
   position: relative;
   top: -1rem;
@@ -37,7 +40,10 @@
   border-bottom: 1px solid #eee;
   /* border-top: 2px solid #eee; */
   color: var(--orange-600);
+  color: white;
+  color: var(--orange-600);
   background-color: #f6cba8;
+  background-color: #eee;
 
   /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }

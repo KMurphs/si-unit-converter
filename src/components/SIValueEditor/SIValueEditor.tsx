@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import "./SIValueEditor.css"
 import UpDownInput from '../UpDownInput/UpDownInput';
@@ -20,7 +20,8 @@ const SIValueEditor: React.FC<TProps> = ({sivalue, onChange, extraClasses}) => {
     onChange(sivalue)
   }
   return (
-    <Fragment>
+
+    <div className="si-value-container">
       <div className="si-value-title"><h3>Enter the value to be converted</h3></div>
       <div className={`si-value-editor ${extraClasses}`}>
 
@@ -45,7 +46,10 @@ const SIValueEditor: React.FC<TProps> = ({sivalue, onChange, extraClasses}) => {
         </div>
 
       </div>
-    </Fragment>
+         
+    </div>
+
+
 
   )
 

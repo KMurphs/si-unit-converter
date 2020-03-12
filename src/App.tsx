@@ -153,6 +153,7 @@ function App() {
         <div className="app-container bg-red-100">
 
 
+          <h1>Current Conversion</h1>
           
           
           <div className="current-conversion">
@@ -341,15 +342,17 @@ function App() {
           <div className={`app-side-data-container ${controls.viewunits ? 'app-side-data-container--visible' : ''}`}>
             {
               unitsDefinitionsUtils.getAll().map((un, id) => (
-                <div key={id} onClick={ evt => onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un) }  className={`app-side-data-item app-side-data-item-unit-definition  ${siunitOnDisplay.symbol===un.symbol?'app-side-data-item-unit-definition--active':''}`}>
+                <div key={id} onClick={ evt => { onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un); setSiunitOnDisplay(tmp => {tmp.symbol=un.symbol; return {...tmp}}) }  }  className={`app-side-data-item app-side-data-item-unit-definition  ${siunitOnDisplay.symbol===un.symbol?'app-side-data-item-unit-definition--active':''}`}>
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
-                    <span className="definition-name">{un.name}</span>
+                    <span className="definition-name">{un.name}   </span>
+                    <span className="definition-view"><i className="fas fa-eye"></i></span>
                     <span className="definition-measures">*{un.measurement}</span>
                   </p>
                 </div>
               ))
             }
+            <div className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
           </div>
 
 
