@@ -47,7 +47,8 @@ function App() {
     showparenthesis: false,
   }
   const [controls, setControls] = useState<TControls>(controlsDefault)
-  const {showparenthesis, ..._showSideBarData} = controls
+  const {showparenthesis} = controls
+  // const {showparenthesis, ..._showSideBarData} = controls
   // const showSideBarData = Object.values(_showSideBarData).reduce((acc: boolean, val: boolean)=>acc||val, false)
 
 

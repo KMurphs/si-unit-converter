@@ -1,4 +1,4 @@
-import { TUnitDefinition, TUnit, TSuffix, TRecord, TOpUnit, TDimension, TSIValue, TUnitDefinitionUtils, TSuffixUtils } from "./app.types"
+import { TUnitDefinition, TUnit, TSuffix, TRecord, TOpUnit, TSIValue, TUnitDefinitionUtils, TSuffixUtils } from "./app.types"
 import { nativeUnitDefinitions, nativeSuffixes, SISuffix } from "./app.native.data";
 
 export default class AppController {

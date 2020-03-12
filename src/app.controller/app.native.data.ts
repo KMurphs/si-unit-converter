@@ -1,4 +1,4 @@
-import { TSuffix, TUnitDefinition, TUnitDefinitionComponent } from "./app.types";
+import { TSuffix, TUnitDefinition } from "./app.types";
 
 export enum SISuffix {
   YOTTA = 24,

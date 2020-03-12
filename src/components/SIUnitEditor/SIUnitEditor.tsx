@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import "./SIUnitEditor.css"
 import UpDownInput, { UpDownInputContainer } from '../UpDownInput/UpDownInput';
-import { TSIValue, TUnit, TOpUnit, TSuffix, TUnitDefinition, TSuffixUtils, TUnitDefinitionUtils } from '../../app.controller/app.types';
+import { TUnit, TSuffixUtils, TUnitDefinitionUtils } from '../../app.controller/app.types';
 import { SISuffix } from '../../app.controller/app.native.data';
 import { buildMathJaxUnit } from '../mathjax.utils';
 

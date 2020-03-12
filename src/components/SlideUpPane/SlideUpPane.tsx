@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import "./SlideUpPane.css"
 
@@ -12,7 +12,7 @@ const SlideUpPane: React.FC<TProps> = ({children, state, onClose, extraClasses})
 
 
   return (
-    <div className={`bottom-pane ${state?'bottom-pane--visible':''}`}>
+    <div className={`bottom-pane ${state?'bottom-pane--visible':''} ${extraClasses}`}>
       <div className="bottom-pane-inner">
         <label className="bottom-pane-close" htmlFor="bottom-pane-close"><i className="fas fa-times"></i><input type="checkbox" id="bottom-pane-close" checked={state} onChange={evt=>onClose()}/></label>
         {children}

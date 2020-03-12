@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 import "./SIValueEditor.css"
 import UpDownInput from '../UpDownInput/UpDownInput';

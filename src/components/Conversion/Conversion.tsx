@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import "./Conversion.css"
 import { TSIValue, TOpUnit, TSuffix } from '../../app.controller/app.types';
