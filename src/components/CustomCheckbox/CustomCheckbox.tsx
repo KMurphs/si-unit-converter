@@ -8,11 +8,12 @@ type Props = {
     handleChange: (newValue: boolean)=>void,
     extraClasses?: string,
     tokens?: string[]
+    disabled?: boolean
 }
 
   
   
-const CustomCheckbox: React.FC<Props> = ({checked, handleChange, extraClasses, tokens}) => {
+const CustomCheckbox: React.FC<Props> = ({checked, handleChange, extraClasses, tokens, disabled}) => {
 
     const _tokens = tokens || []
     const token1 = _tokens[0] === '' ? '' : _tokens[0] || 'Checkbox'
@@ -24,7 +25,7 @@ const CustomCheckbox: React.FC<Props> = ({checked, handleChange, extraClasses, t
 
     return (
         <label htmlFor={`toggle-control-${uniqueID}`} id={`custom-checkbox-${uniqueID}`} className={`custom-checkbox-container ${checked?'custom-checkbox-container--checked':''} ${extraClasses}`}>
-            <input type="checkbox" checked={checked} id={`toggle-control-${uniqueID}`} name="" onChange={evt => handleChange(evt.target.checked)}/>
+            <input type="checkbox" disabled={disabled} checked={checked} id={`toggle-control-${uniqueID}`} name="" onChange={evt => handleChange(evt.target.checked)}/>
             <div className="custom-checkbox-background">
                 <span></span>
             </div>
@@ -37,7 +38,8 @@ const CustomCheckbox: React.FC<Props> = ({checked, handleChange, extraClasses, t
 CustomCheckbox.defaultProps = {
     checked: false,
     extraClasses: '',
-    tokens: ['Checkbox', 'Selected', 'Deselected']
+    tokens: ['Checkbox', 'Selected', 'Deselected'],
+    disabled: false
 }
 
 

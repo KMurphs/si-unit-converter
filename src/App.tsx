@@ -13,6 +13,7 @@ import SlideUpPane, { UpDownInputContainer } from './components/SlideUpPane/Slid
 import Modal from './components/Modal/Modal';
 import { CustomInputText } from './components/CustomInput/CustomInput';
 import SIDefinitionEditor from './components/SIDefinitionEditor/SIDefinitionEditor';
+import AddSIUnitButton from './components/SIUnitEditor/AddSIUnitButton';
 
 declare global {
   interface Window { MathJax: any; }
@@ -240,7 +241,7 @@ function App() {
                 )
               })
             }
-            <div className="si-unit-editor-add-unit" >
+            {/* <div className="si-unit-editor-add-unit" >
               <div className="si-unit-editor-add-button" onClick={evt=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
                 <i className="fas fa-plus"></i>
               </div>
@@ -252,7 +253,15 @@ function App() {
                     {siunitToAdd.symbol + " "}
                 </UpDownInputContainer>
               </div>
-            </div>
+            </div> */}
+            
+            <AddSIUnitButton onAdd={()=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
+                <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
+                                      onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
+                >
+                    {siunitToAdd.symbol + " "}
+                </UpDownInputContainer>
+            </AddSIUnitButton>
           </SlideUpPane>
 
 

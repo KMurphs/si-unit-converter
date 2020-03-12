@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import "./SIDefinitionEditor.css"
 import { TUnitDefinition, TUnit, TSuffixUtils, TUnitDefinitionUtils } from '../../app.controller/app.types';
@@ -6,20 +6,24 @@ import { CustomInputText, CustomInputNumberUndefined } from '../CustomInput/Cust
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox';
 import SIUnitEditor from '../SIUnitEditor/SIUnitEditor';
 import { updateUnitCollection } from '../../App';
+import AddSIUnitButton from '../SIUnitEditor/AddSIUnitButton';
+import { UpDownInputContainer } from '../UpDownInput/UpDownInput';
 
 
 type TProps = {
-  definition: TUnitDefinition,
+  definition: TUnitDefinition|null,
   onChange: (newVal: TUnitDefinition)=>void,
-  onSave: (newVal: TUnitDefinition)=>void,
+  onSave: (newVal: TUnitDefinition, isNew: boolean)=>void,
   suffixUtils: TSuffixUtils,
   mustShowParenthesis: boolean,
   unitDefUtils: TUnitDefinitionUtils,
   extraClasses?: string,
 }
-const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasses,  suffixUtils, mustShowParenthesis, unitDefUtils}) => {
+const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasses,  suffixUtils, mustShowParenthesis, unitDefUtils, onSave}) => {
 
-  const handleChange = (currDefinition: TUnitDefinition, fieldKey: string, fieldValue: any)=>{
+  
+  const handleChange = (currDefinition: TUnitDefinition, fieldKey: string, fieldValue: any, useLocalDefinition: boolean)=>{
+
     let tmp = {...currDefinition}
     switch(fieldKey){
       case 'name': tmp.name = fieldValue as string; break;
@@ -32,26 +36,51 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
       case 'components.units': tmp.components.units = fieldValue as TUnit[]; break;
       default: break;
     }
-    onChange(tmp)
+    if(!useLocalDefinition){
+      onChange(tmp)
+    }
+    setLocalDefinition({...tmp})
+  }
+
+  const emptyUnitDefinition: TUnitDefinition = {
+    symbol: '',
+    name: '',
+    description: '',
+    measurement: '',
+    components: {
+      factor: 1,
+      units: []
+    },
+    isBasicDimension: {
+      value: false,
+      symbol: ''
+    }
   }
   
+  const useLocalDefinition = definition === null
+  const [localDefinition, setLocalDefinition] = useState<TUnitDefinition>(emptyUnitDefinition)
+  const currDefinition = definition ? definition : localDefinition
+  definition && setLocalDefinition({...definition})
+
+  const [siunitToAdd, setSiunitToAdd] = useState<string>("")
+
   return (
     <div className={`definition-page ${extraClasses}`}>
 
 
 
-      <h1>Updating Unit Definition</h1>
+      <h1>{useLocalDefinition ? 'Creating' : 'Updating'} Unit Definition</h1>
 
 
 
       <div className="definition-id">
         <div className="definition-page-group">
           <span>Unit Name</span>
-          <CustomInputText value={definition.name} handleChange={(val)=>handleChange(definition, "name", val)}/>
+          <CustomInputText value={currDefinition.name} disabled={!useLocalDefinition} handleChange={(val)=>handleChange(currDefinition, "name", val, useLocalDefinition)}/>
         </div>
         <div className="definition-page-group">
           <span>Symbol</span>
-          <CustomInputText value={definition.symbol} handleChange={(val)=>handleChange(definition, "symbol", val)}/>
+          <CustomInputText value={currDefinition.symbol} disabled={!useLocalDefinition} handleChange={(val)=>handleChange(currDefinition, "symbol", val, useLocalDefinition)}/>
         </div>
       </div>
 
@@ -60,11 +89,11 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
       <div className="definition-docs">
         <div className="definition-page-group">
           <span>What does the unit measures </span>
-          <CustomInputText value={definition.measurement} handleChange={(val)=>handleChange(definition, "measurement", val)}/>
+          <CustomInputText value={currDefinition.measurement} disabled={!useLocalDefinition} handleChange={(val)=>handleChange(currDefinition, "measurement", val, useLocalDefinition)}/>
         </div>
         <div className="definition-page-group">
           <span>Description for this unit</span>
-          <textarea value={definition.description} onChange={(evt)=>handleChange(definition, "description", evt.target.value)}/>
+          <textarea value={currDefinition.description} onChange={(evt)=>handleChange(currDefinition, "description", evt.target.value, useLocalDefinition)}/>
         </div>
       </div>
 
@@ -73,16 +102,16 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
       <div className="definition-composition">
         <div className="definition-page-group">
           <span>isBasicDimension</span>
-          <CustomCheckbox extraClasses={"text-black"} checked={definition.isBasicDimension.value} handleChange={(val)=>handleChange(definition, "isBasicDimension.value", val)} tokens={['', 'Unit is a Basic Dimension', 'Unit is Composed']}/>
+          <CustomCheckbox extraClasses={"text-black"} disabled={!useLocalDefinition} checked={currDefinition.isBasicDimension.value} handleChange={(val)=>handleChange(currDefinition, "isBasicDimension.value", val, useLocalDefinition)} tokens={['', 'Unit is a Basic Dimension', 'Unit is Composed']}/>
         </div>
 
 
         {
-          definition.isBasicDimension.value && (
+          currDefinition.isBasicDimension.value && (
             <Fragment>
               <div className="definition-page-group">
                 <span>Dimension Symbol</span>
-                <CustomInputText value={definition.isBasicDimension.symbol} handleChange={(val)=>handleChange(definition, "isBasicDimension.symbol", val)}/>
+                <CustomInputText value={currDefinition.isBasicDimension.symbol} disabled={!useLocalDefinition} handleChange={(val)=>handleChange(currDefinition, "isBasicDimension.symbol", val, useLocalDefinition)}/>
               </div>
             </Fragment>
           )
@@ -91,16 +120,16 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
 
 
         {
-          !definition.isBasicDimension.value && (
+          !currDefinition.isBasicDimension.value && (
             <Fragment>
               <div className="definition-page-group">
                 <span>Conversion Factor</span>
-                <CustomInputNumberUndefined value={definition.components.factor} handleChange={(val)=>handleChange(definition, "components.factor", val)}/>
+                <CustomInputNumberUndefined value={currDefinition.components.factor} disabled={!useLocalDefinition} handleChange={(val)=>handleChange(currDefinition, "components.factor", val, useLocalDefinition)}/>
               </div>
               <div className="definition-page-group">
                 <span>Unit Composition</span>
                 {
-                  definition.components.units.map((un, index) => { 
+                  currDefinition.components.units.map((un, index) => { 
                     return (
                       <SIUnitEditor siunit={un} 
                                     key={index}
@@ -109,11 +138,21 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
                                     onOpenSuffixPane={()=>{}}
                                     onOpenUnitPane={()=>{}}
                                     mustShowParenthesis={mustShowParenthesis}
-                                    onChange={newVal=> handleChange(definition, "components.units", updateUnitCollection(definition.components.units, newVal, index))}
+                                    onChange={newVal=> handleChange(currDefinition, "components.units", updateUnitCollection(currDefinition.components.units, newVal, index), useLocalDefinition)}
                       />
                     )
                   })
                 }
+
+                
+                <AddSIUnitButton onAdd={()=>handleChange(currDefinition, "components.units", updateUnitCollection([...currDefinition.components.units, {suffix: 0, symbol: siunitToAdd, exponent: 1}], {suffix: 0, symbol: siunitToAdd, exponent: 1}, -1), useLocalDefinition)}>
+                    <UpDownInputContainer onNext={()=>setSiunitToAdd(unitDefUtils.getNext(siunitToAdd).symbol)}
+                                          onPrevious={()=>setSiunitToAdd(unitDefUtils.getPrevious(siunitToAdd).symbol)}
+                    >
+                        {siunitToAdd + " "}
+                    </UpDownInputContainer>
+                </AddSIUnitButton>
+
               </div>
             </Fragment>
           )
@@ -123,7 +162,7 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
 
 
       <div className="definition-page-group">
-        <button className="definition-save">
+        <button className="definition-save" onClick={evt=>onSave(currDefinition, useLocalDefinition)}>
           Save
         </button>
       </div>       
