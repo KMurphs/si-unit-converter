@@ -1,18 +1,23 @@
 import React, { Fragment } from 'react';
 
 import "./SIDefinitionEditor.css"
-import { TUnitDefinition, TUnit } from '../../app.controller/app.types';
+import { TUnitDefinition, TUnit, TSuffixUtils, TUnitDefinitionUtils } from '../../app.controller/app.types';
 import { CustomInputText, CustomInputNumberUndefined } from '../CustomInput/CustomInput';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox';
+import SIUnitEditor from '../SIUnitEditor/SIUnitEditor';
+import { updateUnitCollection } from '../../App';
 
 
 type TProps = {
   definition: TUnitDefinition,
   onChange: (newVal: TUnitDefinition)=>void,
   onSave: (newVal: TUnitDefinition)=>void,
+  suffixUtils: TSuffixUtils,
+  mustShowParenthesis: boolean,
+  unitDefUtils: TUnitDefinitionUtils,
   extraClasses?: string,
 }
-const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasses}) => {
+const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasses,  suffixUtils, mustShowParenthesis, unitDefUtils}) => {
 
   const handleChange = (currDefinition: TUnitDefinition, fieldKey: string, fieldValue: any)=>{
     let tmp = {...currDefinition}
@@ -31,7 +36,7 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
   }
   
   return (
-    <div className="definition-page">
+    <div className={`definition-page ${extraClasses}`}>
 
       <h1>Updating Unit Definition</h1>
 
@@ -89,8 +94,21 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
               </div>
               <div className="definition-page-group">
                 <span>Unit Composition</span>
-                
-                <CustomInputText value={"components units"} handleChange={(val)=>handleChange(definition, "components.units", val)}/>
+                {
+                  definition.components.units.map((un, index) => { 
+                    return (
+                      <SIUnitEditor siunit={un} 
+                                    key={index}
+                                    suffixUtils={suffixUtils}
+                                    unitDefUtils={unitDefUtils}
+                                    onOpenSuffixPane={()=>{}}
+                                    onOpenUnitPane={()=>{}}
+                                    mustShowParenthesis={mustShowParenthesis}
+                                    onChange={newVal=> handleChange(definition, "components.units", updateUnitCollection(definition.components.units, newVal, index))}
+                      />
+                    )
+                  })
+                }
               </div>
             </Fragment>
           )
@@ -116,3 +134,22 @@ SIDefinitionEditor.defaultProps = {
   extraClasses: ""
 }
 export default SIDefinitionEditor
+
+
+// {
+//   name: "Newton",
+//   symbol: 'N',
+//   description: "",
+//   measurement: "Force",
+//   isBasicDimension: {
+//     value: true,
+//     symbol: 'L'
+//   },
+//   components: {
+//     factor: 1,
+//     units: [
+//       { suffix: SISuffix.KILO, symbol: 'g', exponent: 1 },
+//       { suffix: SISuffix.UNITY, symbol: 'm', exponent: 1 },
+//       { suffix: SISuffix.UNITY, symbol: 's', exponent: -2 }
+//     ]
+//   }

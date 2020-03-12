@@ -106,14 +106,7 @@ function App() {
   
   
   
-  const updateUnitCollection = (unCollection: TUnit[], unObj: TUnit, unIndex: number): TUnit[]=>{
-    const uns = unCollection.map((tmp, idx) => {
-      (unIndex === idx) && (tmp = {...unObj});
-      (unIndex !== idx) && (tmp.suffix /= tmp.exponent);
-      return tmp;
-    })
-    return uns
-  }
+
   const updateControlObj = (controlsDefault: TControls, controlsCurrent: TControls, updateKeys: string[], updateVals: boolean[])=>{
     let state = {...controlsDefault}; 
 
@@ -361,7 +354,7 @@ function App() {
                 <div key={id} onClick={ evt => { onPaneItemClick && onPaneItemClick.current && onPaneItemClick.current(un); setSiunitOnDisplay(tmp => {tmp.symbol=un.symbol; return {...tmp}}) }  }  className={`app-side-data-item app-side-data-item-unit-definition  ${siunitOnDisplay.symbol===un.symbol?'app-side-data-item-unit-definition--active':''}`}>
                   <p className="definition-symbol">{un.symbol}</p>
                   <p className="definition-details">
-                    <span className="definition-name">{un.name}   </span>
+                    <span className="definition-name">{un.name}</span>
                     <span className="definition-view" onClick={evt=>{evt.stopPropagation();evt.preventDefault();setDefinitionToEdit({...un})}}><i className="fas fa-eye"></i></span>
                     <span className="definition-measures">*{un.measurement}</span>
                   </p>
@@ -371,7 +364,17 @@ function App() {
             <div onClick={evt=>setDefinitionToEdit({...emptyUnitDefinition})} className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
           </div>
           <Modal isActive={definitionToEdit!==null} onDeactivate={()=>setDefinitionToEdit(null)} extraClasses={"top-z-index"}>
-            {definitionToEdit!==null && (<SIDefinitionEditor definition={definitionToEdit} onChange={(def)=>setDefinitionToEdit({...def})} onSave={()=>{}}/>)}
+            {
+              definitionToEdit!==null && ac.current && (
+                <SIDefinitionEditor definition={definitionToEdit} 
+                                    onChange={(def)=>setDefinitionToEdit({...def})} 
+                                    onSave={(def)=>ac.current && ac.current.addDefinition({...def})}
+                                    suffixUtils={suffixUtils}
+                                    unitDefUtils={unitsDefinitionsUtils}
+                                    mustShowParenthesis={showparenthesis}
+                />
+              )
+            }
           </Modal>
 
 
@@ -394,11 +397,24 @@ function App() {
             <div className="sidebar-control-container" onClick={evt=>onResetApp()}><div className="sidebar-control_details">Reset App</div><div className="sidebar-control"><i className="fas fa-undo-alt"></i></div></div>
           </div>
 
+
+
+
         </div>
-
-
     </div>
   );
 }
 
 export default App;
+
+
+const updateUnitCollection = (unCollection: TUnit[], unObj: TUnit, unIndex: number): TUnit[]=>{
+  const uns = unCollection.map((tmp, idx) => {
+    (unIndex === idx) && (tmp = {...unObj});
+    (unIndex !== idx) && (tmp.suffix /= tmp.exponent);
+    return tmp;
+  })
+  return uns
+}
+
+export {updateUnitCollection}
