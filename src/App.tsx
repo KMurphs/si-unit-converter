@@ -133,7 +133,7 @@ function App() {
   
   
   
-  const [definitionToEdit, setDefinitionToEdit] = useState<TUnitDefinition|null>(null)
+  const [definitionToEdit, setDefinitionToEdit] = useState<TUnitDefinition|null|undefined>(null)
   const emptyUnitDefinition: TUnitDefinition = {
     symbol: '',
     name: '',
@@ -241,19 +241,7 @@ function App() {
                 )
               })
             }
-            {/* <div className="si-unit-editor-add-unit" >
-              <div className="si-unit-editor-add-button" onClick={evt=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
-                <i className="fas fa-plus"></i>
-              </div>
-              <p>Add Unit: </p>
-              <div>
-                <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
-                                      onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
-                >
-                    {siunitToAdd.symbol + " "}
-                </UpDownInputContainer>
-              </div>
-            </div> */}
+
             
             <AddSIUnitButton onAdd={()=>ac.current && setUiConversion(ac.current, uiConversion, "initialUnits", [...uiConversion.initialUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
                 <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
@@ -302,19 +290,13 @@ function App() {
                 )
               })
             }
-            <div className="si-unit-editor-add-unit" >
-              <div className="si-unit-editor-add-button" onClick={evt=>ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", [...uiConversion.targetUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
-                <i className="fas fa-plus"></i>
-              </div>
-              <p>Add Unit: </p>
-              <div>
+            <AddSIUnitButton onAdd={()=>ac.current && setUiConversion(ac.current, uiConversion, "targetUnits", [...uiConversion.targetUnits.units.map(un=>{un.suffix = un.suffix/un.exponent; return {...un}}), {suffix: SISuffix.UNITY, symbol: siunitToAdd.symbol, exponent: 1}])}>
                 <UpDownInputContainer onNext={()=>setSiunitToAdd({...unitsDefinitionsUtils.getNext(siunitToAdd.symbol)})}
-                                      onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
+                                          onPrevious={()=>setSiunitToAdd({...unitsDefinitionsUtils.getPrevious(siunitToAdd.symbol)})}
                 >
                     {siunitToAdd.symbol + " "}
                 </UpDownInputContainer>
-              </div>
-            </div>
+            </AddSIUnitButton>
           </SlideUpPane>
         </div>
 
@@ -370,14 +352,14 @@ function App() {
                 </div>
               ))
             }
-            <div onClick={evt=>setDefinitionToEdit({...emptyUnitDefinition})} className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
+            <div onClick={evt=>setDefinitionToEdit(undefined)} className="add-definition app-side-data-item app-side-data-item-unit-definition"><div><i className="fas fa-plus"></i></div><p>Add New</p></div>
           </div>
           <Modal isActive={definitionToEdit!==null} onDeactivate={()=>setDefinitionToEdit(null)} extraClasses={"top-z-index"}>
             {
               definitionToEdit!==null && ac.current && (
                 <SIDefinitionEditor definition={definitionToEdit} 
                                     onChange={(def)=>setDefinitionToEdit({...def})} 
-                                    onSave={(def)=>ac.current && ac.current.addDefinition({...def})}
+                                    onSave={(def)=>{ac.current && ac.current.addDefinition({...def}); setDefinitionToEdit(null)}}
                                     suffixUtils={suffixUtils}
                                     unitDefUtils={unitsDefinitionsUtils}
                                     mustShowParenthesis={showparenthesis}

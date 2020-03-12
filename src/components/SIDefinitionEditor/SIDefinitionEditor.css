@@ -54,7 +54,7 @@
   border: none;
   margin-top: 2rem;
   background-color: var(--gray-800);
-  padding: .7rem 1rem;
+  padding: 1rem 1rem;
   border-radius: 4px;
   color: white;
   font-weight: bold;
@@ -69,4 +69,10 @@
 
 .definition-composition .text-black *{
   color: var(--orange-700) !important;
+}
+
+
+.definition-page-group .si-unit-editor{
+  background: var(--orange-700);
+  border-radius: 4px;
 }

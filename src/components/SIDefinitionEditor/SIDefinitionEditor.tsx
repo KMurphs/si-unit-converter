@@ -11,7 +11,7 @@ import { UpDownInputContainer } from '../UpDownInput/UpDownInput';
 
 
 type TProps = {
-  definition: TUnitDefinition|null,
+  definition: TUnitDefinition|undefined,
   onChange: (newVal: TUnitDefinition)=>void,
   onSave: (newVal: TUnitDefinition, isNew: boolean)=>void,
   suffixUtils: TSuffixUtils,
@@ -57,19 +57,20 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
     }
   }
   
-  const useLocalDefinition = definition === null
+  const useLocalDefinition = definition === undefined
   const [localDefinition, setLocalDefinition] = useState<TUnitDefinition>(emptyUnitDefinition)
   const currDefinition = definition ? definition : localDefinition
-  definition && setLocalDefinition({...definition})
+  definition && JSON.stringify(definition) !== JSON.stringify(localDefinition) && setLocalDefinition({...definition})
 
   const [siunitToAdd, setSiunitToAdd] = useState<string>("")
+  console.log("[SIDefinitionEditor]: ", definition, useLocalDefinition, localDefinition)
 
   return (
     <div className={`definition-page ${extraClasses}`}>
 
 
 
-      <h1>{useLocalDefinition ? 'Creating' : 'Updating'} Unit Definition</h1>
+      <h1>{useLocalDefinition ? 'Creating' : 'Viewing'} Unit Definition</h1>
 
 
 
@@ -93,7 +94,7 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
         </div>
         <div className="definition-page-group">
           <span>Description for this unit</span>
-          <textarea value={currDefinition.description} onChange={(evt)=>handleChange(currDefinition, "description", evt.target.value, useLocalDefinition)}/>
+          <textarea value={currDefinition.description} disabled={!useLocalDefinition} onChange={(evt)=>handleChange(currDefinition, "description", evt.target.value, useLocalDefinition)}/>
         </div>
       </div>
 
@@ -163,7 +164,7 @@ const SIDefinitionEditor: React.FC<TProps> = ({definition, onChange, extraClasse
 
       <div className="definition-page-group">
         <button className="definition-save" onClick={evt=>onSave(currDefinition, useLocalDefinition)}>
-          Save
+          {useLocalDefinition ? 'Save' : 'Close'}
         </button>
       </div>       
 
