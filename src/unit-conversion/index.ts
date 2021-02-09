@@ -1,21 +1,56 @@
 import assert from "assert";
 import { prefixFromLog } from "./prefixes";
-import { TDefinitionRepository, TRelation, TUnit } from "./types";
+import { TDefinitionRepository, TRelation, TUnit, TUnitDefinition } from "./types";
 
 
-const resolveToDimension = (definitionsRepo: TDefinitionRepository, relation: TRelation): TRelation => {
-    const empty = { coefficient: 1, units: [] };
-    if(relation.units.length === 0) return empty
-    
-    let acc: TRelation = empty;
 
-    for(const unit of relation.units){
-        if(!(unit.symbol in definitionsRepo)) acc = multiplyRelations(acc, { coefficient: 1, units: [unit] })
-        else acc = multiplyRelations(acc, transformRelation(resolveToDimension(definitionsRepo, { coefficient: 1, units: [unit] }), unit.logPrefix, unit.exponent))
-    }
 
-    return acc;
-}
+/**
+ * CRUD Operation of Definition Repository
+ */
+const definitionsRepository: TDefinitionRepository = {}
+const addDefinitionInRepo = (definitionsRepo: TDefinitionRepository, symbol: string, name: string, relation: TRelation)=>({definitionsRepo, ...{[symbol]: {symbol, name, relation}}});
+const updateDefinitionInRepo = addDefinitionInRepo;
+const getDefinitionBySymbolFromRepo = (definitionsRepo: TDefinitionRepository, symbol: string) => ({...definitionsRepo[symbol]});
+const getDefinitionByNameFromRepo  = (definitionsRepo: TDefinitionRepository, name: string) => ({...Object(definitionsRepo).values().filter((def: TUnitDefinition) => def.name === name)[0]});
+const deleteDefinitionFromRepo  = (definitionsRepo: TDefinitionRepository, symbol: string) => Object(definitionsRepo).values().reduce((acc: TDefinitionRepository, def: TUnitDefinition) => ({acc, ...(def.symbol === symbol ? {} : {...def})}));
+
+/**
+ * Add/Create a unit definition
+ * @param  {string} symbol: Symbol for the unit being defined (e.g. N)
+ * @param  {string} name: Name of the unit being defined (e.g. Newton)
+ * @param  {TRelation} relation: Theoretical relation that defines the unit in terms of existing units (e.g. 1N = 1 kg.m/s^2 )
+ */
+export const addDefinition = addDefinitionInRepo.bind(null, definitionsRepository);
+/**
+ * Update a unit definition
+ * @param  {string} symbol: Symbol for the unit being updated (e.g. N)
+ * @param  {string} name: Name of the unit being updated (e.g. Newton)
+ * @param  {TRelation} relation: Theoretical relation that defines the unit in terms of existing units (e.g. 1N = 1 kg.m/s^2 )
+ */
+export const updateDefinition = updateDefinitionInRepo.bind(null, definitionsRepository);
+/**
+ * Get a unit definition from the repository - using its symbol (e.g. N for Newton)
+ * @param  {string} symbol: Symbol for the unit
+ */
+export const getDefinitionBySymbol = getDefinitionBySymbolFromRepo.bind(null, definitionsRepository);
+/**
+ * Get a unit definition from the repository - using its name (e.g. Newton)
+ * @param  {string} name: Name of the unit
+ */
+export const getDefinitionByName = getDefinitionByNameFromRepo.bind(null, definitionsRepository);
+/**
+ * Delete a unit definition from the repository - using its symbol (e.g. N for Newton)
+ * @param  {string} name: Name of the unit
+ */
+// export const deleteDefinitionBySymbol = deleteDefinitionFromRepo.bind(null, definitionsRepository);
+
+
+
+
+
+
+
 
 const sortAndMerge = (arr1: any[], arr2: any[], compareFn: (a: any, b: any)=>number): any[] => {
     arr1.sort(compareFn);
@@ -48,9 +83,6 @@ const multiplyRelations = (relation1: TRelation, relation2: TRelation): TRelatio
 }
 
 
-const definitionsRepository: TDefinitionRepository = {}
-const resolveToDimensionWithRepo = resolveToDimension.bind(null, definitionsRepository);
-
 const transformRelation = (relation: TRelation, logPrefix: number, exponent: number): TRelation => {
     return {
         coefficient: relation.coefficient * (10 ^ (logPrefix * exponent)),
@@ -63,7 +95,31 @@ const relationToString = (units: TUnit[]): string => {
     return units.reduce((acc, unit) => acc + unitToString(unit), "");
 }
 
-const convertRelation = (src: TRelation, dst: TRelation): number => {
+
+
+
+
+
+
+
+
+export const resolveToDimension = (definitionsRepo: TDefinitionRepository, relation: TRelation): TRelation => {
+    if(relation.units.length === 0) return { coefficient: relation.coefficient, units: [] };
+    
+    let acc: TRelation = { coefficient: 1, units: [] };;
+
+    for(const unit of relation.units){
+        if(!(unit.symbol in definitionsRepo)) acc = multiplyRelations(acc, { coefficient: 1, units: [unit] })
+        else acc = multiplyRelations(acc, transformRelation(resolveToDimension(definitionsRepo, { coefficient: 1, units: [unit] }), unit.logPrefix, unit.exponent))
+    }
+
+    return acc;
+}
+const resolveToDimensionWithRepo = resolveToDimension.bind(null, definitionsRepository);
+
+
+
+export const convertRelation = (src: TRelation, dst: TRelation): number => {
     
     const srcDim = resolveToDimensionWithRepo(src);
     const dstDim = resolveToDimensionWithRepo(dst);
