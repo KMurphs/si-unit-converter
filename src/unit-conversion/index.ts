@@ -9,10 +9,10 @@ import { TDefinitionRepository, TRelation, TUnit, TUnitDefinition } from "./type
  * CRUD Operation of Definition Repository
  */
 const definitionsRepository: TDefinitionRepository = {}
-const addDefinitionInRepo = (definitionsRepo: TDefinitionRepository, symbol: string, name: string, relation: TRelation)=>({definitionsRepo, ...{[symbol]: {symbol, name, relation}}});
+const addDefinitionInRepo = (definitionsRepo: TDefinitionRepository, symbol: string, relation: TRelation)=>({definitionsRepo, ...{[symbol]: {symbol, name, relation}}});
 const updateDefinitionInRepo = addDefinitionInRepo;
 const getDefinitionBySymbolFromRepo = (definitionsRepo: TDefinitionRepository, symbol: string) => ({...definitionsRepo[symbol]});
-const getDefinitionByNameFromRepo  = (definitionsRepo: TDefinitionRepository, name: string) => ({...Object(definitionsRepo).values().filter((def: TUnitDefinition) => def.name === name)[0]});
+// const getDefinitionByNameFromRepo  = (definitionsRepo: TDefinitionRepository, name: string) => ({...Object(definitionsRepo).values().filter((def: TUnitDefinition) => def.name === name)[0]});
 const deleteDefinitionFromRepo  = (definitionsRepo: TDefinitionRepository, symbol: string) => Object(definitionsRepo).values().reduce((acc: TDefinitionRepository, def: TUnitDefinition) => ({acc, ...(def.symbol === symbol ? {} : {...def})}));
 
 /**
@@ -38,7 +38,7 @@ export const getDefinitionBySymbol = getDefinitionBySymbolFromRepo.bind(null, de
  * Get a unit definition from the repository - using its name (e.g. Newton)
  * @param  {string} name: Name of the unit
  */
-export const getDefinitionByName = getDefinitionByNameFromRepo.bind(null, definitionsRepository);
+// export const getDefinitionByName = getDefinitionByNameFromRepo.bind(null, definitionsRepository);
 /**
  * Delete a unit definition from the repository - using its symbol (e.g. N for Newton)
  * @param  {string} name: Name of the unit
