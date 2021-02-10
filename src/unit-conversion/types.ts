@@ -1,6 +1,7 @@
 
+
 /**
- * A unit such as 'cm^2' consists of a symbol 'm', an exponent '2', and a prefix 'centi' whose log evaluate to '-2'
+ * A unit such as ``cm^2`` consists of a symbol ``m``, an exponent ``2``, and a prefix ``centi`` whose log evaluate to ``-2``
  */
 export type TUnit = {
     symbol: string,
@@ -8,20 +9,30 @@ export type TUnit = {
     exponent: number,
 }
 /**
- * The relation allows for units to be composed together and therefore allows a unit to be expressed in terms of fundamental entities (masse, length, time,...)
+ * The relation data structure allows for units to be composed together and, therefore, allows a unit to be expressed in terms of fundamental entities (mass, length, time,...)
  * 
- * e.g 1 knot = 1.852 km/h
+ * e.g ``1 knot = 1.852 km/h``
  * 
- * - The coefficient field captures the value "1.852".
- * - The units field will capture its composition: [{symbol: m, exponent: 1, logPrefix: 3}, {symbol: h, exponent: -1, logPrefix: 0}].
+ * - The coefficient field captures the value "``1.852``".
+ * - The units field will capture the '``knot``' composition: 
+ * ```
+ * [
+ *      {symbol: m, exponent: 1, logPrefix: 3}, 
+ *      {symbol: h, exponent: -1, logPrefix: 0}
+ * ]
+ * ```
  */
 export type TRelation = {
     coefficient: number,
     units: TUnit[]
 }
+
 /**
- * The Unit definition exposes the definition of a unit in terms of other existing ones by capturing its theoretical definition.
- * e.g. 1 Newton = 1 kg.m/s^2 
+ * The Unit definition allows the definition of a unit in terms of other existing ones via its theoretical definition.
+ * e.g. 1 Newton is theoreticaly defined as being:
+ * ```
+ *      1 N = 1 kg.m/s^2
+ * ``` 
  */
 export type TUnitDefinition = {
     symbol: string,
