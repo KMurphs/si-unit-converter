@@ -47,6 +47,19 @@ export function prefixFromSymbol( symbol: Prefix ): TPrefix | null {
 
 
 /**
+ * Given a logarithmic value 'log10', this function returns the prefix that corresponds to ``10^log10``.
+ * 
+ * If no such symbol exists it returns null
+ * 
+ * @param  {number} log10: The logarithmic value of the prefix (e.g. ``6 for mega``, ``-3 for milli``)
+ * @returns {TPrefix | null}: The prefix if found
+ */
+export function prefixFromLog( log10: number ): TPrefix | null  {
+    const [prefix] = Object.values(PrefixRepo).filter((prefix: TPrefix) => prefix.log10 === log10);
+    return prefix ? prefix : null; 
+} 
+
+/**
  * Given a logarithmic value 'log10', this function returns the prefix symbol that corresponds to ``10^log10``.
  * 
  * If no such symbol exists it returns ``10^log10``
@@ -54,7 +67,7 @@ export function prefixFromSymbol( symbol: Prefix ): TPrefix | null {
  * @param  {number} log10: The logarithmic value of the prefix (e.g. ``6 for mega``, ``-3 for milli``)
  * @returns string: The symbol if found (e.g. ``M for log10 = 3``, ``p for log10 = -12``, ``10^5 for log10 = 5``
  */
-export function prefixFromLog( log10: number ): string {
-    const [prefix] = Object(PrefixRepo).values().filter((prefix: TPrefix) => prefix.log10 === log10);
+export function prefixSymbolFromLog( log10: number ): string {
+    const prefix = prefixFromLog(log10);
     return prefix ? prefix.symbol : `10^${log10}`; 
 } 
