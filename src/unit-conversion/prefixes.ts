@@ -7,6 +7,8 @@ export enum Prefix {
     DECA = "da",
     UNIT = "1",
     DECI = "d",
+    CENTI = "c",
+    MILLI = "m",
 }
 
 
@@ -33,6 +35,7 @@ const Repository: { [key: string]: TPrefix } = {
     "1":    { name: "unit",     symbol: "",      log10:  0 },
     "d":    { name: "deci",     symbol: "d",     log10: -1 },
     "c":    { name: "centi",    symbol: "c",     log10: -2 },
+    "m":    { name: "milli",    symbol: "m",     log10: -3 },
 }
 
 

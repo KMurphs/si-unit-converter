@@ -79,7 +79,6 @@ describe("Can Convert Between Units", ()=>{
         expect(conversions.fromSrcToDst(new Relation(2).addUnit("N").getRelation(), new Relation(2).addUnit("N").getRelation())).toBe(1);
         expect(conversions.fromSrcToDst(new Relation(2).addUnit("N").getRelation(), new Relation(2).addUnit("N").getRelation())).toBe(1);
         expect(conversions.fromSrcToDst(new Relation(2).addUnit("N").getRelation(), new Relation(1).addUnit("N").getRelation())).toBe(2);
-
         
         expect(conversions.fromSrcToDst(new Relation(20).addUnit("N").getRelation(), new Relation(5).addUnit("g", Prefix.KILO).addUnit("m").addUnit("s", Prefix.UNIT, -2).getRelation())).toBe(4);
 
@@ -89,4 +88,33 @@ describe("Can Convert Between Units", ()=>{
     it("Handles incompatibles units", ()=>{
         expect(() => conversions.fromSrcToDst(new Relation(20).addUnit("N").getRelation(), new Relation(5).addUnit("g", Prefix.KILO, 2).addUnit("m").addUnit("s", Prefix.UNIT, -2).getRelation())).toThrow(AssertionError);
     })
+
+    // 6 kg * 20 (mg)^-2 -> 120 (ng)^-1
+})
+
+
+describe("Can Operate on Units", ()=>{
+
+    it("Can multiply units", ()=>{
+        const result1 = conversions.multiply(
+            new Relation(20).addUnit("N").getRelation(), 
+            new Relation(5).addUnit("g", Prefix.KILO, 2).getRelation()
+        );
+        expect(result1.coefficient).toBe(100);
+        expect(result1.units.length).toBe(2);
+
+        // 6 kg * 20 (mg)^-2 -> 120 (ng)^-1
+        const result2 = conversions.multiply(
+            new Relation(6).addUnit("g", Prefix.KILO).getRelation(), 
+            new Relation(20).addUnit("g", Prefix.MILLI, -2).getRelation()
+        );
+        expect(result2.coefficient).toBe(120);
+        expect(result2.units.length).toBe(1);
+        expect(result2.units[0].symbol).toBe("g");
+        expect(result2.units[0].exponent).toBe(-1);
+        expect(result2.units[0].logPrefix).toBe(-9);
+        
+    })
+
+    
 })

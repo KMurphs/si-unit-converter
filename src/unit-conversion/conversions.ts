@@ -67,7 +67,7 @@ const mergeUnits = (acc: TUnitAccumulation, b: TUnit) => {
  * @param  {TRelation} relation2
  * @returns {TRelation}
  */
-const multiplyRelations = (relation1: TRelation, relation2: TRelation): TRelation => {
+export const multiply = (relation1: TRelation, relation2: TRelation): TRelation => {
     // Sort and merge the input's units components
     const units = sortAndMerge(relation1.units, relation2.units, (a: TUnit, b: TUnit) => ("" + a.symbol).localeCompare(b.symbol) === 0 ? a.exponent - b.exponent : ("" + a.symbol).localeCompare(b.symbol))
     
@@ -116,7 +116,7 @@ const relationToString = (units: TUnit[]): string => {
  * @param  {TRelation} rel2
  * @returns {boolean}
  */
-export const haveSameDimensions = (rel1: TRelation, rel2: TRelation) => multiplyRelations(rel1, transformRelation(rel2, 0, -1)).units.length === 0
+export const haveSameDimensions = (rel1: TRelation, rel2: TRelation) => multiply(rel1, transformRelation(rel2, 0, -1)).units.length === 0
 
 
 
@@ -145,7 +145,7 @@ export const getDimensions = (relation: TRelation): TRelation => {
             const dimension = computedDimension.units.length === 0 ? { coefficient: 1, units: [unit] } : computedDimension;
             
             // Aggregate the dimensions, taking into account possible exponents
-            return multiplyRelations(acc, transformRelation(dimension, unit.logPrefix, unit.exponent));
+            return multiply(acc, transformRelation(dimension, unit.logPrefix, unit.exponent));
         }, 
         
         // Initial Object
