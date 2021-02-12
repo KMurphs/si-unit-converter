@@ -15,6 +15,8 @@ export type TPrefix = {
  * An enumeration of prefixes to be used by the application and the user interface.
  */
 export enum Prefix {
+    KILO = "k",
+    HECTO = "h",
     DECA = "da",
     UNIT = "1",
     DECI = "d",
@@ -25,6 +27,7 @@ export enum Prefix {
  * A repository of prefixes to be used by the application and the user interface.
  */
 const PrefixRepo: { [key: string]: TPrefix } = {
+    "k":    { name: "kilo",     symbol: "k",     log10:  3 },
     "h":    { name: "hecto",    symbol: "h",     log10:  2 },
     "da":   { name: "deca",     symbol: "da",    log10:  1 },
     "1":    { name: "unit",     symbol: "",      log10:  0 },

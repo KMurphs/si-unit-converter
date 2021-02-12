@@ -87,6 +87,7 @@ export const bindToDefinitionsRepo = (f: Function) => f.bind(definitionsReposito
 export class Relation {
     relation: TRelation;
     constructor(coefficient: number = 1) {
+        if(coefficient === 0) throw new Error("Expected Relation coefficent to be not null");
         this.relation = { coefficient, units: [] };
     }
     

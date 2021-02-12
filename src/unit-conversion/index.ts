@@ -54,27 +54,28 @@ const relationToString = (units: TUnit[]): string => {
 
 
 
-
-
 export const resolveToDimension = (relation: TRelation): TRelation => {
-    if(relation.units.length === 0) return { coefficient: relation.coefficient, units: [] };
     
-    let acc: TRelation = { coefficient: 1, units: [] };
-
-    for(const unit of relation.units){
-        const definition = getDefinitionBySymbol(unit.symbol);
-        const prefix = prefixFromLog(unit.logPrefix)?.symbol;
-        if(!definition) acc = multiplyRelations(acc, { coefficient: 1, units: [unit] });
-        else {
-            const resolution = resolveToDimension(definition.theoreticalRelation);
-            const relation = resolution.units.length === 0 ? new Relation().addUnit(unit.symbol, prefix as Prefix, unit.exponent).getRelation() : resolution;
-            acc = multiplyRelations(acc, transformRelation(relation, unit.logPrefix, unit.exponent));
-        }
-    }
-
-    return acc;
+    // Handle the case of unknown and fundamental units
+    if(!relation || !relation.units || relation.units.length === 0) return { coefficient: 1, units: [] };
+    
+    // Aggregate the units dimensions
+    return relation.units.reduce(
+        (acc, unit) => {
+            // Try resolving the current units dimension
+            const computedDimension = resolveToDimension(getDefinitionBySymbol(unit.symbol).theoreticalRelation);
+            // In case this unit is unknown or fundamental, update the previously computed dimension to include the unit 
+            const dimension = computedDimension.units.length === 0 ? { coefficient: 1, units: [unit] } : computedDimension;
+            // Aggregate the dimensions, taking into account possible exponents
+            return multiplyRelations(acc, transformRelation(dimension, unit.logPrefix, unit.exponent));
+        }, 
+        // Initial Object
+        { coefficient: relation.coefficient, units: [] } as TRelation
+    )
 }
 
+
+export const haveIdenticalDimensions = (rel1: TRelation, rel2: TRelation) => multiplyRelations(rel1, transformRelation(rel2, 0, -1)).units.length === 0
 
 
 export const convertRelation = (src: TRelation, dst: TRelation): number => {
@@ -82,7 +83,7 @@ export const convertRelation = (src: TRelation, dst: TRelation): number => {
     const srcDim = resolveToDimension(src);
     const dstDim = resolveToDimension(dst);
 
-    assert(multiplyRelations(srcDim, transformRelation(dstDim, 0, -1)).units.length === 0, `Cannot Convert between dimensions '${relationToString(src.units)}' and '${relationToString(dst.units)}'`);
+    assert(haveIdenticalDimensions(srcDim, dstDim), `Cannot Convert between dimensions '${relationToString(src.units)}' and '${relationToString(dst.units)}'`);
     
-    return dstDim.coefficient/srcDim.coefficient;
+    return srcDim.coefficient/dstDim.coefficient;
 }

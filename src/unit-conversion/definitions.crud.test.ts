@@ -1,4 +1,6 @@
+import { haveIdenticalDimensions } from ".";
 import { addDefinition, getDefinitionBySymbol, getDefinitionByName, updateDefinition, deleteDefinitionBySymbol, Relation } from "./definitions.db";
+import { Prefix } from "./prefixes";
 
 const fundamentalUnits = [
     {symbol: "g", name: "gram", description: "Measures Mass (1)"},
@@ -67,11 +69,31 @@ describe("Can Manage Definitions", ()=>{
 })
 
 
+describe("Allow Custom Units", () =>{
+
+    it("Creates and Retrieves Custom Units", ()=>{
+        const customUnits = [
+            {symbol: "N", name: "Newton", relation: new Relation().addUnit("g", Prefix.KILO).addUnit("m").addUnit("s", Prefix.UNIT, -2), description: "Measures Force"},
+            {symbol: "Pa", name: "Pascal", relation: new Relation().addUnit("N").addUnit("m", Prefix.UNIT, -2), description: "Measures Pressure"},
+            {symbol: "Pa2", name: "Square Pascal", relation: new Relation().addUnit("Pa", Prefix.KILO, -2), description: "Measures Sqaure Pressure"},
+        ]
+        customUnits.forEach(({name, symbol, description, relation}) => addDefinition(symbol, name, relation, description))
+        customUnits.forEach(({name, symbol, description, relation}) => {
+            const definition = getDefinitionByName(name);
+
+            expect(definition.symbol).toBe(symbol);
+            expect(definition.name).toBe(name);
+            expect(definition.description).toBe(description);
+            expect(haveIdenticalDimensions(definition.theoreticalRelation, relation.getRelation())).toBe(true);
+        })
+    })
 
 
-describe("Handles Empty Relations", () =>{
+})
 
-    it("Empty Relation Values", ()=>{
+describe("Handles Edge Cases Relations", () =>{
+
+    it("Handles Empty Relation Values", ()=>{
         fundamentalUnits.forEach(({name, symbol, description}) => addDefinition(symbol, name, new Relation(), description));
         fundamentalUnits.forEach(({symbol}) => {
             const { theoreticalRelation: relation } = getDefinitionBySymbol(symbol);
@@ -81,4 +103,8 @@ describe("Handles Empty Relations", () =>{
         });
     })
 
+    it("Handles 0, null or undefined coefficients in relations", ()=>{
+        expect(() => new Relation(0).addUnit("m")).toThrow(Error);
+        expect(haveIdenticalDimensions(new Relation(undefined).addUnit("m").getRelation(), new Relation(1).addUnit("m").getRelation())).toBe(true);
+    })
 })
