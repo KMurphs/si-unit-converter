@@ -1,6 +1,4 @@
-import { haveIdenticalDimensions } from ".";
-import { addDefinition, getDefinitionBySymbol, getDefinitionByName, updateDefinition, deleteDefinitionBySymbol, Relation } from "./definitions.db";
-import { Prefix } from "./prefixes";
+import { conversions, definitions, Relation, Prefix } from ".";
 
 const fundamentalUnits = [
     {symbol: "g", name: "gram", description: "Measures Mass (1)"},
@@ -14,9 +12,9 @@ const invalidUnits = [
 describe("Can Manage Definitions", ()=>{
 
     it("Can Add and Find Definitions", ()=>{
-        fundamentalUnits.forEach(({name, symbol, description}) => addDefinition(symbol, name, new Relation(), description));
+        fundamentalUnits.forEach(({name, symbol, description}) => definitions.create(symbol, name, new Relation(), description));
         fundamentalUnits.forEach(({name, symbol, description}) => {
-            const definition = getDefinitionBySymbol(symbol);
+            const definition = definitions.fromUnitSymbol(symbol);
 
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
@@ -26,14 +24,14 @@ describe("Can Manage Definitions", ()=>{
 
     it("Can Find Definitions By Name or Symbol", ()=>{
         fundamentalUnits.forEach(({name, symbol, description}) => {
-            const definition = getDefinitionBySymbol(symbol);
+            const definition = definitions.fromUnitSymbol(symbol);
 
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
             expect(definition.description).toBe(description);
         });
         fundamentalUnits.forEach(({name, symbol, description}) => {
-            const definition = getDefinitionByName(name);
+            const definition = definitions.fromUnitName(name);
 
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
@@ -43,9 +41,9 @@ describe("Can Manage Definitions", ()=>{
 
 
     it("Can Update Definitions", ()=>{
-        fundamentalUnits.forEach(({name, symbol, description}) => updateDefinition(symbol, name, new Relation(), description.replace("(1)", "")));
+        fundamentalUnits.forEach(({name, symbol, description}) => definitions.update(symbol, name, new Relation(), description.replace("(1)", "")));
         fundamentalUnits.forEach(({name, symbol, description}) => {
-            const definition = getDefinitionBySymbol(symbol);
+            const definition = definitions.fromUnitSymbol(symbol);
 
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
@@ -55,10 +53,10 @@ describe("Can Manage Definitions", ()=>{
 
 
     it("Can Delete Definitions", ()=>{
-        invalidUnits.forEach(({name, symbol, description}) => addDefinition(symbol, name, new Relation(), description));
-        invalidUnits.forEach(({symbol}) => deleteDefinitionBySymbol(symbol));
+        invalidUnits.forEach(({name, symbol, description}) => definitions.create(symbol, name, new Relation(), description));
+        invalidUnits.forEach(({symbol}) => definitions.deleteWithSymbol(symbol));
         invalidUnits.forEach(({symbol}) => {
-            const definition = getDefinitionBySymbol(symbol);
+            const definition = definitions.fromUnitSymbol(symbol);
 
             expect(definition.symbol).toBe(undefined);
             expect(definition.name).toBe(undefined);
@@ -77,14 +75,14 @@ describe("Allow Custom Units", () =>{
             {symbol: "Pa", name: "Pascal", relation: new Relation().addUnit("N").addUnit("m", Prefix.UNIT, -2), description: "Measures Pressure"},
             {symbol: "Pa2", name: "Square Pascal", relation: new Relation().addUnit("Pa", Prefix.KILO, -2), description: "Measures Sqaure Pressure"},
         ]
-        customUnits.forEach(({name, symbol, description, relation}) => addDefinition(symbol, name, relation, description))
+        customUnits.forEach(({name, symbol, description, relation}) => definitions.create(symbol, name, relation, description))
         customUnits.forEach(({name, symbol, description, relation}) => {
-            const definition = getDefinitionByName(name);
+            const definition = definitions.fromUnitName(name);
 
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
             expect(definition.description).toBe(description);
-            expect(haveIdenticalDimensions(definition.theoreticalRelation, relation.getRelation())).toBe(true);
+            expect(conversions.haveSameDimensions(definition.theoreticalRelation, relation.getRelation())).toBe(true);
         })
     })
 
@@ -94,9 +92,9 @@ describe("Allow Custom Units", () =>{
 describe("Handles Edge Cases Relations", () =>{
 
     it("Handles Empty Relation Values", ()=>{
-        fundamentalUnits.forEach(({name, symbol, description}) => addDefinition(symbol, name, new Relation(), description));
+        fundamentalUnits.forEach(({name, symbol, description}) => definitions.create(symbol, name, new Relation(), description));
         fundamentalUnits.forEach(({symbol}) => {
-            const { theoreticalRelation: relation } = getDefinitionBySymbol(symbol);
+            const { theoreticalRelation: relation } = definitions.fromUnitSymbol(symbol);
 
             expect(relation.coefficient).toBe(1);
             expect(relation.units.length).toBe(0);
@@ -105,6 +103,6 @@ describe("Handles Edge Cases Relations", () =>{
 
     it("Handles 0, null or undefined coefficients in relations", ()=>{
         expect(() => new Relation(0).addUnit("m")).toThrow(Error);
-        expect(haveIdenticalDimensions(new Relation(undefined).addUnit("m").getRelation(), new Relation(1).addUnit("m").getRelation())).toBe(true);
+        expect(conversions.haveSameDimensions(new Relation(undefined).addUnit("m").getRelation(), new Relation(1).addUnit("m").getRelation())).toBe(true);
     })
 })

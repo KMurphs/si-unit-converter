@@ -1,4 +1,4 @@
-import { Prefix, prefixFromSymbol, prefixSymbolFromLog } from "./prefixes";
+import { Prefix, prefixFromSymbol } from "./prefixes";
 import { TDefinitionRepository, TRelation, TUnitDefinition, TDescriptionRepository, TUnitDescription } from "./types";
 
 /**
@@ -32,7 +32,7 @@ const deleteDescriptionFromRepo  = (descriptionsRepo: TDescriptionRepository, sy
  * @param  {string} description: Description of the unit being defined (e.g. Measures Force)
  * @param  {TRelation} relation: Theoretical relation that defines the unit in terms of existing units (e.g. 1N = 1 kg.m/s^2 )
  */
-export const addDefinition = (symbol: string, name: string, theoreticalDefinition: Relation, description?: string) => {
+export const create = (symbol: string, name: string, theoreticalDefinition: Relation, description?: string) => {
     definitionsRepository = addDefinitionInRepo(definitionsRepository, symbol, theoreticalDefinition.getRelation());
     descriptionsRepository = addDescriptionInRepo(descriptionsRepository, symbol, name, description || "");
 };
@@ -43,22 +43,22 @@ export const addDefinition = (symbol: string, name: string, theoreticalDefinitio
  * @param  {string} description: Description of the unit being defined (e.g. Measures Force)
  * @param  {TRelation} relation: Theoretical relation that defines the unit in terms of existing units (e.g. 1N = 1 kg.m/s^2 )
  */
-export const updateDefinition = addDefinition;
+export const update = create;
 /**
  * Get a unit definition from the repository - using its symbol (e.g. N for Newton)
  * @param  {string} symbol: Symbol for the unit
  */
-export const getDefinitionBySymbol = (symbol: string) => ({...getDefinitionBySymbolFromRepo(definitionsRepository, symbol), ...getDescriptionBySymbolFromRepo(descriptionsRepository, symbol)});
+export const fromUnitSymbol = (symbol: string) => ({...getDefinitionBySymbolFromRepo(definitionsRepository, symbol), ...getDescriptionBySymbolFromRepo(descriptionsRepository, symbol)});
 /**
  * Get a unit definition from the repository - using its name (e.g. Newton)
  * @param  {string} name: Name of the unit
  */
-export const getDefinitionByName = (name: string) => getDefinitionBySymbol(getDescriptionByNameFromRepo(descriptionsRepository, name).symbol);
+export const fromUnitName = (name: string) => fromUnitSymbol(getDescriptionByNameFromRepo(descriptionsRepository, name).symbol);
 /**
  * Delete a unit definition from the repository - using its symbol (e.g. N for Newton)
  * @param  {string} name: Name of the unit
  */
-export const deleteDefinitionBySymbol = (symbol: string) => {
+export const deleteWithSymbol = (symbol: string) => {
     definitionsRepository = deleteDefinitionFromRepo(definitionsRepository, symbol);
     descriptionsRepository = deleteDescriptionFromRepo(descriptionsRepository, symbol);
 };
@@ -66,14 +66,14 @@ export const deleteDefinitionBySymbol = (symbol: string) => {
  * Determines whether a unit identified by its symbol is present in the unit repository.
  * @param  {string} symbol: Symbol for the unit
  */
-export const isUnitSymbolInRepo = (symbol: string) => getDefinitionBySymbolFromRepo(definitionsRepository, symbol) ? true : false;
+export const knowsUnitSymbol = (symbol: string) => getDefinitionBySymbolFromRepo(definitionsRepository, symbol) ? true : false;
 
 
 /**
  * Binds a funct.
  * @param  {string} symbol: Symbol for the unit
  */
-export const bindToDefinitionsRepo = (f: Function) => f.bind(definitionsRepository);
+export const bindToRepository = (f: Function) => f.bind(definitionsRepository);
 
 
 
@@ -101,7 +101,7 @@ export class Relation {
      */
     addUnit(symbol: string, prefix?: Prefix, exponent: number = 1){
         const safePrefix = prefix || Prefix.UNIT;
-        if(!isUnitSymbolInRepo(symbol)) throw new Error("Unknown unit with symbol '" + symbol + "'");
+        if(!knowsUnitSymbol(symbol)) throw new Error("Unknown unit with symbol '" + symbol + "'");
         if(!prefixFromSymbol(safePrefix)) throw new Error("Unknown prefix with symbol '" + prefix + "'");
 
         this.relation.units.push({symbol, logPrefix: prefixFromSymbol(safePrefix)?.log10 || 0, exponent});
