@@ -33,7 +33,7 @@ const deleteDescriptionFromRepo  = (descriptionsRepo: TDescriptionRepository, sy
  * @param  {TRelation} relation: Theoretical relation that defines the unit in terms of existing units (e.g. 1N = 1 kg.m/s^2 )
  */
 export const create = (symbol: string, name: string, theoreticalDefinition: Relation, description?: string) => {
-    definitionsRepository = addDefinitionInRepo(definitionsRepository, symbol, theoreticalDefinition.getRelation());
+    definitionsRepository = addDefinitionInRepo(definitionsRepository, symbol, theoreticalDefinition.toRelation());
     descriptionsRepository = addDescriptionInRepo(descriptionsRepository, symbol, name, description || "");
 };
 /**
@@ -99,7 +99,7 @@ export class Relation {
      * 
      * @return {Relation} returns the class instance (allowing chaining)
      */
-    addUnit(symbol: string, prefix?: Prefix, exponent: number = 1){
+    withUnit(symbol: string, prefix?: Prefix, exponent: number = 1){
         const safePrefix = prefix || Prefix.UNIT;
         if(!knowsUnitSymbol(symbol)) throw new Error("Unknown unit with symbol '" + symbol + "'");
         if(!prefixFromSymbol(safePrefix)) throw new Error("Unknown prefix with symbol '" + prefix + "'");
@@ -112,5 +112,5 @@ export class Relation {
      * Consume the relation created
      * @return {Relation} returns the relation object
      */
-    getRelation() { return this.relation }
+    toRelation() { return this.relation }
 }

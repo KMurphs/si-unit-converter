@@ -71,9 +71,9 @@ describe("Allow Custom Units", () =>{
 
     it("Creates and Retrieves Custom Units", ()=>{
         const customUnits = [
-            {symbol: "N", name: "Newton", relation: new Relation().addUnit("g", Prefix.KILO).addUnit("m").addUnit("s", Prefix.UNIT, -2), description: "Measures Force"},
-            {symbol: "Pa", name: "Pascal", relation: new Relation().addUnit("N").addUnit("m", Prefix.UNIT, -2), description: "Measures Pressure"},
-            {symbol: "Pa2", name: "Square Pascal", relation: new Relation().addUnit("Pa", Prefix.KILO, -2), description: "Measures Sqaure Pressure"},
+            {symbol: "N", name: "Newton", relation: new Relation().withUnit("g", Prefix.KILO).withUnit("m").withUnit("s", Prefix.UNIT, -2), description: "Measures Force"},
+            {symbol: "Pa", name: "Pascal", relation: new Relation().withUnit("N").withUnit("m", Prefix.UNIT, -2), description: "Measures Pressure"},
+            {symbol: "Pa2", name: "Square Pascal", relation: new Relation().withUnit("Pa", Prefix.KILO, -2), description: "Measures Square Pressure"},
         ]
         customUnits.forEach(({name, symbol, description, relation}) => definitions.create(symbol, name, relation, description))
         customUnits.forEach(({name, symbol, description, relation}) => {
@@ -82,7 +82,7 @@ describe("Allow Custom Units", () =>{
             expect(definition.symbol).toBe(symbol);
             expect(definition.name).toBe(name);
             expect(definition.description).toBe(description);
-            expect(conversions.haveSameDimensions(definition.theoreticalRelation, relation.getRelation())).toBe(true);
+            expect(conversions.haveSameDimensions(definition.theoreticalRelation, relation.toRelation())).toBe(true);
         })
     })
 
@@ -102,7 +102,7 @@ describe("Handles Edge Cases Relations", () =>{
     })
 
     it("Handles 0, null or undefined coefficients in relations", ()=>{
-        expect(() => new Relation(0).addUnit("m")).toThrow(Error);
-        expect(conversions.haveSameDimensions(new Relation(undefined).addUnit("m").getRelation(), new Relation(1).addUnit("m").getRelation())).toBe(true);
+        expect(() => new Relation(0).withUnit("m")).toThrow(Error);
+        expect(conversions.haveSameDimensions(new Relation(undefined).withUnit("m").toRelation(), new Relation(1).withUnit("m").toRelation())).toBe(true);
     })
 })
